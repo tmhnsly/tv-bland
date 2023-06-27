@@ -28,7 +28,7 @@ const CastMemberCard: React.FC<CastMemberCardProps> = ({ castMember }) => {
           className="object-cover"
         />
       </a>
-      <div className="flex flex-col md:w-3/4 lg:flex-row gap-2 lg:gap-5 lg:justify-between">
+      <div className="flex flex-col md:w-3/4 lg:flex-row lg:gap-5 lg:justify-between">
         <a
           className="text-black dark:text-white hover:underline"
           href={castMember.person.url}
