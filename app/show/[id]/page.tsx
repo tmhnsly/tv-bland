@@ -39,7 +39,7 @@ export default async function ShowPage({ params }: any) {
                     : "/tv-test-card-portrait.webp)"
                 }
                 alt={`${show.name} poster`}
-                height={500}
+                height={600}
                 width={400}
                 priority
               />
