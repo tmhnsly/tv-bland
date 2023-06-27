@@ -11,7 +11,7 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode }) => {
   return (
     <Link
       href={`/show/${episode.show.id}`}
-      className="rounded-lg transition duration-200 p-3 gap-1 flex flex-col hover:scale-110 hover:bg-gray-200/50 hover:shadow-xl"
+      className="rounded-lg transition duration-200 p-3 gap-3 flex flex-col hover:scale-110 hover:bg-gray-200/50 hover:shadow-xl"
     >
       <div className="relative aspect-[3/4] rounded-lg overflow-hidden">
         <Image
@@ -21,6 +21,7 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode }) => {
               : "/tv-test-card-portrait.png"
           }
           fill
+          sizes="(max-width: 300px)"
           loading="lazy"
           alt={`${episode.show.name} poster`}
           className="object-cover"

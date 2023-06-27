@@ -34,7 +34,7 @@ const ShowInfoSection: React.FC<ShowInfoSectionProps> = ({ show }) => {
   };
 
   return (
-    <div>
+    <div className="md:min-w-[21rem]">
       <h2 className="mb-5 text-black dark:text-white">Show info</h2>
       <div className="grid grid-cols-2 md:grid-cols-1 gap-5">
         <ShowInfoItem

@@ -2,8 +2,8 @@ import React from "react";
 import Image from "next/image";
 import ShowInfoSection from "@/components/showInfoSection";
 import StarringSection from "@/components/starringSection";
-import { sanitize } from "isomorphic-dompurify";
 import StarRating from "@/components/starRating";
+import sanitizeHtml from "sanitize-html";
 
 async function getShow(id: string) {
   const res = await fetch(`https://api.tvmaze.com/shows/${id}?embed=cast`);
@@ -31,7 +31,7 @@ export default async function ShowPage({ params }: any) {
       >
         <div className="backdrop-blur-3xl backdrop-brightness-125 dark:backdrop-brightness-75 pb-8 min-h-screen">
           <section className="-mt-16 px-5 flex flex-col gap-5 items-center">
-            <div className="flex flex-col items-center pt-[5.25rem] pb-5 gap-5 md:flex-row justify-center lg:translate-y-16">
+            <div className="flex flex-col items-center pt-20 pb-5 gap-5 md:flex-row justify-center lg:translate-y-16 lg:pt-0">
               <div className="relative sm:mt-5 w-full h-auto max-w-sm">
                 <Image
                   src={
@@ -59,7 +59,9 @@ export default async function ShowPage({ params }: any) {
                 <h1>{show.name ? show.name : "Name not available"}</h1>
                 {show.summary ? (
                   <span
-                    dangerouslySetInnerHTML={{ __html: sanitize(show.summary) }}
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHtml(show.summary),
+                    }}
                   />
                 ) : (
                   "Summary not available"

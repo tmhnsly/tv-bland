@@ -1,4 +1,6 @@
-export default function Spinner() {
+import React from "react";
+
+const Spinner: React.FC = ({}) => {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div role="status">
@@ -21,4 +23,6 @@ export default function Spinner() {
       </div>
     </div>
   );
-}
+};
+
+export default Spinner;
