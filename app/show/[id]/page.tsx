@@ -24,7 +24,7 @@ const ShowPage: React.FC = async ({ params }: any) => {
       : `url(/tv-test-card-portrait.webp)`;
 
   return (
-    <main
+    <div
       className="min-h-screen bg-fixed bg-center bg-no-repeat bg-cover"
       style={{ backgroundImage }}
     >
@@ -76,7 +76,7 @@ const ShowPage: React.FC = async ({ params }: any) => {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 };
 
