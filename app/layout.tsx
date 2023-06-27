@@ -1,10 +1,10 @@
 "use client";
+import React from "react";
 import Link from "next/link";
 import { PiTelevisionDuotone } from "react-icons/pi";
 import { IoMoon, IoSunny } from "react-icons/io5";
-import React from "react";
-import "./globals.css";
 import { Rubik } from "next/font/google";
+import "./globals.css";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
@@ -25,6 +25,13 @@ export default function RootLayout({ children }: React.PropsWithChildren<{}>) {
 
   return (
     <html>
+      <head>
+        <title>TV Bland</title>
+        <meta
+          name="description"
+          content="TV Show and web series database. Create personalised schedules. Episode guide, cast, crew and character information."
+        />
+      </head>
       <body
         className={`${rubik.className} bg-white dark:bg-black ${
           darkMode ? "dark" : ""
