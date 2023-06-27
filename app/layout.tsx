@@ -5,7 +5,7 @@ import { IoMoon, IoSunny } from "react-icons/io5";
 import React from "react";
 import "../styles/globals.css";
 
-const RootLayout: React.FC = ({ children }: React.PropsWithChildren<{}>) => {
+export default function RootLayout({ children }: React.PropsWithChildren<{}>) {
   const [darkMode, toggleDarkMode] = React.useState(false);
 
   React.useEffect(() => {
@@ -44,6 +44,4 @@ const RootLayout: React.FC = ({ children }: React.PropsWithChildren<{}>) => {
       </body>
     </html>
   );
-};
-
-export default RootLayout;
+}
