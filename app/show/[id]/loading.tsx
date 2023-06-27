@@ -1,6 +1,6 @@
 import Spinner from "@/components/spinner";
 
-const Loading: React.FC = () => {
+const Loading = () => {
   return <Spinner />;
 };
 

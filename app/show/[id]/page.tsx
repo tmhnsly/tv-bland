@@ -15,7 +15,7 @@ async function getShow(id: string) {
   return res.json();
 }
 
-const ShowPage: React.FC = async ({ params }: any) => {
+const ShowPage = async ({ params }: any) => {
   const show = await getShow(params.id);
 
   const backgroundImage =
@@ -41,7 +41,7 @@ const ShowPage: React.FC = async ({ params }: any) => {
                 alt={`${show.name} poster`}
                 height={500}
                 width={400}
-                priority
+                loading="eager"
               />
             </div>
             <div className="backdrop-blur-sm text-black dark:text-white bg-white/70 dark:bg-black/70 lg:max-w-xl w-full h-fit p-5 flex flex-col gap-5 rounded-lg self-center">
