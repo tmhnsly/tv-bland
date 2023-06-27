@@ -8,7 +8,7 @@ interface CastMemberCardProps {
 
 const CastMemberCard: React.FC<CastMemberCardProps> = ({ castMember }) => {
   return (
-    <div className="flex flex-row md:flex-row items-start md:items-center gap-5 md:gap-10 h-auto md:h-20">
+    <div className="flex flex-row md:flex-row items-center gap-5 md:gap-10 h-auto md:h-20">
       <a
         href={castMember.person.url}
         target="_blank"
@@ -28,7 +28,7 @@ const CastMemberCard: React.FC<CastMemberCardProps> = ({ castMember }) => {
           className="object-cover"
         />
       </a>
-      <div className="flex flex-col md:flex-row gap-2 md:gap-5 md:w-3/4 md:justify-between">
+      <div className="flex flex-col md:w-3/4 lg:flex-row gap-2 lg:gap-5 lg:justify-between">
         <a
           className="text-black dark:text-white hover:underline"
           href={castMember.person.url}

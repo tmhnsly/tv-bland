@@ -2,6 +2,7 @@ import { Episode } from "@/types/episode";
 import { PiTelevisionDuotone } from "react-icons/pi";
 import EpisodeCard from "@/components/episodeCard";
 import { getFormattedDate } from "@/utils/getCurrentDate";
+import Image from "next/image";
 
 const currentDate = getFormattedDate();
 
@@ -17,15 +18,18 @@ async function getSchedule() {
   return res.json();
 }
 
-export default async function HomePage() {
+const HomePage: React.FC = async ({}) => {
   const schedule = await getSchedule();
-
   return (
-    <div
-      className="bg-contain text-black dark:text-white"
-      style={{ backgroundImage: 'url("/tv-test-card-portrait.png")' }}
-    >
-      <div className="flex flex-col bg-gray-200/90 dark:bg-gray-900/90 px-10 md:px-16 py-16 backdrop-blur-3xl">
+    <div className="text-black dark:text-white">
+      <Image
+        src={"/tv-test-card-portrait.png"}
+        alt={`Default background image`}
+        fill
+        sizes="(max-width: 50px) 100vw"
+        className="min-h-screen bg-fixed bg-center bg-no-repeat bg-cover"
+      />
+      <div className="flex flex-col bg-gray-200/90 dark:bg-gray-900/90 px-10 md:px-16 pb-16 pt-32 backdrop-blur-3xl">
         <div className="max-w-7xl mx-auto">
           <div className="flex gap-2">
             <h1 className="text-4xl">TV Bland</h1>
@@ -37,11 +41,11 @@ export default async function HomePage() {
           </span>
         </div>
       </div>
-      <div className="px-5 py-10 mx-auto content-center bg-white/90 dark:bg-black/80 backdrop-blur-3xl backdrop-brightness-125 dark:backdrop-brightness-75">
+      <div className="px-5 py-10 mx-auto content-center bg-white/90 dark:bg-black/90 backdrop-blur-3xl backdrop-brightness-125 dark:backdrop-brightness-75">
         <div className="max-w-7xl mx-auto">
           <h2 className="mb-5">Last added shows</h2>
           <div className="grid auto-rows-auto gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-            {schedule.slice(0, 30).map((episode: Episode, key: number) => {
+            {schedule.slice(0, 20).map((episode: Episode, key: number) => {
               return <EpisodeCard episode={episode} key={key} />;
             })}
           </div>
@@ -49,4 +53,6 @@ export default async function HomePage() {
       </div>
     </div>
   );
-}
+};
+
+export default HomePage;

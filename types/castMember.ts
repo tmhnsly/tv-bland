@@ -1,6 +1,5 @@
 export type CastMemberImage = {
   medium: string;
-  original: string;
 };
 
 export type CastMember = {
