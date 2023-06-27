@@ -25,7 +25,7 @@ export default async function HomePage() {
       className="bg-contain text-black dark:text-white"
       style={{ backgroundImage: 'url("/tv-test-card-portrait.png")' }}
     >
-      <div className=" flex flex-col bg-gray-300 dark:bg-gray-600 px-10 md:px-16 py-16">
+      <div className="flex flex-col bg-gray-200/90 dark:bg-gray-900/90 px-10 md:px-16 py-16 backdrop-blur-3xl">
         <div className="max-w-7xl mx-auto">
           <div className="flex gap-2">
             <h1 className="text-4xl">TV Bland</h1>
