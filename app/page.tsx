@@ -21,14 +21,7 @@ async function getSchedule() {
 const HomePage: React.FC = async ({}) => {
   const schedule = await getSchedule();
   return (
-    <div className="text-black dark:text-white">
-      <Image
-        src={"/tv-test-card-portrait.png"}
-        alt={`Default background image`}
-        fill
-        sizes="(max-width: 50px) 100vw"
-        className="min-h-screen bg-fixed bg-center bg-no-repeat bg-cover"
-      />
+    <div className="bg-home bg-cover text-black dark:text-white">
       <div className="flex flex-col bg-gray-200/90 dark:bg-gray-900/90 px-10 md:px-16 pb-16 pt-32 backdrop-blur-3xl">
         <div className="max-w-7xl mx-auto">
           <div className="flex gap-2">

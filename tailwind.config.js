@@ -10,6 +10,11 @@ module.exports = {
     fontFamily: {
       sans: ["Rubik", "sans-serif"],
     },
+    extend: {
+      backgroundImage: {
+        home: "url('/tv-test-card-portrait.png')",
+      },
+    },
   },
   plugins: [],
 };

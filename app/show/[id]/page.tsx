@@ -18,27 +18,26 @@ async function getShow(id: string) {
 export default async function ShowPage({ params }: any) {
   const show = await getShow(params.id);
 
-  const showPoster =
+  const backgroundImage =
     show.image && show.image.original
-      ? show.image.original
-      : "/tv-test-card-portrait.png";
+      ? `url(${show.image.original})`
+      : `url(/tv-test-card-portrait.png)`;
 
   return (
-    <>
-      {/* BACKGROUND IMAGE */}
-      <Image
-        src={showPoster}
-        alt={`${show.name} poster`}
-        fill
-        sizes="(max-width: 50px) 100vw"
-        className="min-h-screen bg-fixed bg-center bg-no-repeat bg-cover"
-      />
+    <main
+      className="min-h-screen bg-fixed bg-center bg-no-repeat bg-cover"
+      style={{ backgroundImage }}
+    >
       <div className="backdrop-blur-3xl backdrop-brightness-125 dark:backdrop-brightness-75 pb-8 min-h-screen">
         <section className="px-5 flex flex-col gap-5 items-center">
           <div className="flex flex-col items-center pt-20 pb-5 gap-5 md:flex-row justify-center lg:translate-y-16 lg:pt-5">
             <div className="relative w-full h-auto max-w-sm">
               <Image
-                src={showPoster}
+                src={
+                  show.image && show.image.original
+                    ? show.image.original
+                    : "/tv-test-card-portrait.png)"
+                }
                 alt={`${show.name} poster`}
                 height={600}
                 width={400}
@@ -76,6 +75,6 @@ export default async function ShowPage({ params }: any) {
           </div>
         </section>
       </div>
-    </>
+    </main>
   );
 }
