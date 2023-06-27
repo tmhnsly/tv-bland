@@ -1,5 +1,7 @@
 import Spinner from "@/components/spinner";
 
-export default function Loading() {
+const Loading = () => {
   return <Spinner />;
-}
+};
+
+export default Loading;

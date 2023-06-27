@@ -15,12 +15,12 @@ async function getShow(id: string) {
   return res.json();
 }
 
-export default async function ShowPage({ params }: any) {
+const ShowPage = async ({ params }: any) => {
   const show = await getShow(params.id);
 
   const backgroundImage =
-    show.image && show.image.original
-      ? `url(${show.image.original})`
+    show.image && show.image.medium
+      ? `url(${show.image.medium})`
       : `url(/tv-test-card-portrait.png)`;
 
   return (
@@ -77,4 +77,6 @@ export default async function ShowPage({ params }: any) {
       </div>
     </main>
   );
-}
+};
+
+export default ShowPage;

@@ -1,5 +1,6 @@
 export type EpisodeImage = {
   original?: string;
+  medium?: string;
 };
 
 export type Episode = {

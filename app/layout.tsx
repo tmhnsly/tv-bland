@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PiTelevisionDuotone } from "react-icons/pi";
 import { IoMoon, IoSunny } from "react-icons/io5";
 import React from "react";
-import "./globals.css";
+import "../styles/globals.css";
 
 export default function RootLayout({ children }: React.PropsWithChildren<{}>) {
   const [darkMode, toggleDarkMode] = React.useState(false);

@@ -2,7 +2,6 @@ import { Episode } from "@/types/episode";
 import { PiTelevisionDuotone } from "react-icons/pi";
 import EpisodeCard from "@/components/episodeCard";
 import { getFormattedDate } from "@/utils/getCurrentDate";
-import Image from "next/image";
 
 const currentDate = getFormattedDate();
 
