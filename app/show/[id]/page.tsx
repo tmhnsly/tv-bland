@@ -21,7 +21,7 @@ const ShowPage = async ({ params }: any) => {
   const backgroundImage =
     show.image && show.image.medium
       ? `url(${show.image.medium})`
-      : `url(/tv-test-card-portrait.png)`;
+      : `url(/tv-test-card-portrait.webp)`;
 
   return (
     <main
@@ -36,11 +36,12 @@ const ShowPage = async ({ params }: any) => {
                 src={
                   show.image && show.image.original
                     ? show.image.original
-                    : "/tv-test-card-portrait.png)"
+                    : "/tv-test-card-portrait.webp)"
                 }
                 alt={`${show.name} poster`}
-                height={600}
+                height={500}
                 width={400}
+                loading="eager"
               />
             </div>
             <div className="backdrop-blur-sm text-black dark:text-white bg-white/70 dark:bg-black/70 lg:max-w-xl w-full h-fit p-5 flex flex-col gap-5 rounded-lg self-center">

@@ -12,7 +12,7 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        home: "url('/tv-test-card-portrait.png')",
+        home: "url('/tv-test-card-portrait.webp')",
       },
     },
   },

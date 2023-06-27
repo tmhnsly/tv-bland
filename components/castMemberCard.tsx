@@ -19,7 +19,7 @@ const CastMemberCard: React.FC<CastMemberCardProps> = ({ castMember }) => {
           src={
             castMember.person.image && castMember.person.image.medium
               ? castMember.person.image.medium
-              : "/tv-test-card-portrait.png"
+              : "/tv-test-card-portrait.webp"
           }
           alt={castMember.person.name}
           fill

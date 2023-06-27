@@ -18,7 +18,7 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode }) => {
           src={
             episode.show.image && episode.show.image.original
               ? episode.show.image.original
-              : "/tv-test-card-portrait.png"
+              : "/tv-test-card-portrait.webp"
           }
           fill
           sizes="(max-width: 300px)"
