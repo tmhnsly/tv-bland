@@ -1,7 +1,5 @@
 import Spinner from "@/components/spinner";
 
-const Loading: React.FC = () => {
+export default function Loading() {
   return <Spinner />;
-};
-
-export default Loading;
+}

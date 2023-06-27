@@ -15,7 +15,7 @@ async function getShow(id: string) {
   return res.json();
 }
 
-const ShowPage: React.FC = async ({ params }: any) => {
+export default async function ShowPage({ params }: any) {
   const show = await getShow(params.id);
 
   const backgroundImage =
@@ -78,6 +78,4 @@ const ShowPage: React.FC = async ({ params }: any) => {
       </div>
     </div>
   );
-};
-
-export default ShowPage;
+}
