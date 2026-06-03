@@ -41,7 +41,6 @@ export async function generateMetadata({
     openGraph: {
       title: show.name ?? "Show",
       description,
-      images: show.image?.original ? [{ url: show.image.original }] : undefined,
     },
   };
 }
