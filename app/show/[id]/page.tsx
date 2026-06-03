@@ -1,5 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import ShowInfoSection from "@/components/showInfoSection";
 import StarringSection from "@/components/starringSection";
@@ -17,6 +18,7 @@ async function getShow(id: string) {
     { next: { revalidate: 86400 } }
   );
 
+  if (res.status === 404) notFound();
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
