@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { CastMember } from "@/types/castMember";
 
@@ -9,10 +10,8 @@ interface CastMemberCardProps {
 const CastMemberCard: React.FC<CastMemberCardProps> = ({ castMember }) => {
   return (
     <div className="flex flex-row md:flex-row items-center gap-5 md:gap-10 h-auto md:h-20">
-      <a
-        href={castMember.person.url}
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href={`/person/${castMember.person.id}`}
         className="w-20 h-20 flex-shrink-0 rounded-full overflow-hidden relative hover:scale-105 hover:shadow-md"
       >
         <Image
@@ -27,16 +26,14 @@ const CastMemberCard: React.FC<CastMemberCardProps> = ({ castMember }) => {
           loading="lazy"
           className="object-cover"
         />
-      </a>
+      </Link>
       <div className="flex flex-col md:w-3/4 lg:flex-row lg:gap-5 lg:justify-between">
-        <a
+        <Link
           className="text-black dark:text-white hover:underline"
-          href={castMember.person.url}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={`/person/${castMember.person.id}`}
         >
           {castMember.person.name}
-        </a>
+        </Link>
         <a
           className="text-gray-500 dark:text-gray-400 hover:underline"
           href={castMember.character.url}

@@ -4,6 +4,7 @@ export type CastMemberImage = {
 
 export type CastMember = {
   person: {
+    id: number;
     name: string;
     image: CastMemberImage;
     url: string;
