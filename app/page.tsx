@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Episode } from "@/types/episode";
 import ShowGrid from "@/components/showGrid";
+import SearchBox from "@/components/searchBox";
 import { dedupeByShow } from "@/utils/dedupeByShow";
 import { getFormattedDate } from "@/utils/getCurrentDate";
 
@@ -23,8 +24,10 @@ async function getSchedule(): Promise<Episode[]> {
 export default async function HomePage() {
   const schedule = await getSchedule();
   const shows = dedupeByShow(schedule)
-    .slice(0, 30)
+    .slice(0, 24)
     .map((episode) => episode.show);
+
+  const featured = shows.find((s) => s.image?.original)?.image?.original ?? null;
 
   const today = new Date().toLocaleDateString("en-GB", {
     weekday: "long",
@@ -37,31 +40,40 @@ export default async function HomePage() {
     <main>
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10">
-          <Image
-            src="/tv-test-card-portrait.webp"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="scale-110 object-cover blur-2xl brightness-[0.45]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-bg/30 via-bg/70 to-bg" />
+          {featured && (
+            <Image
+              src={featured}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="scale-110 object-cover opacity-25 blur-3xl"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-bg/55 via-bg/80 to-bg" />
+          <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_-10%,rgb(var(--accent)/0.2),transparent_60%)]" />
         </div>
 
-        <div className="mx-auto max-w-8xl px-5 pb-16 pt-32 md:px-10 md:pt-44">
+        <div className="mx-auto max-w-3xl px-5 pb-16 pt-36 text-center md:pt-44">
           <p className="reveal text-xs font-semibold uppercase tracking-[0.32em] text-accent">
-            On air today
+            Dropoff
           </p>
-          <h1 className="reveal mt-4 max-w-3xl font-display text-5xl font-semibold md:text-7xl">
-            What&apos;s on tonight
+          <h1 className="reveal mt-4 font-display text-5xl font-semibold md:text-7xl">
+            Does it drop off?
           </h1>
           <p
-            className="reveal mt-5 max-w-xl text-lg text-muted"
-            style={{ animationDelay: "80ms" }}
+            className="reveal mx-auto mt-5 max-w-xl text-lg text-muted"
+            style={{ animationDelay: "70ms" }}
           >
-            Today&apos;s live TV schedule, full episode guides, and the people
-            behind every show.
+            Type any show for its Worth It score, where it drops off, and
+            exactly when to stop watching.
           </p>
+          <div
+            className="reveal mt-8 flex justify-center"
+            style={{ animationDelay: "140ms" }}
+          >
+            <SearchBox />
+          </div>
         </div>
       </section>
 

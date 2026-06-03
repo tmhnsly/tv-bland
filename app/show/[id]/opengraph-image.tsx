@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "TV Bland show";
+export const alt = "Dropoff show";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -71,7 +71,7 @@ export default async function OgImage({
             </div>
           </div>
           <div style={{ display: "flex", fontSize: 30, opacity: 0.7 }}>
-            TV Bland
+            Dropoff
           </div>
         </div>
       </div>

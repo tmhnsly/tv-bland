@@ -19,8 +19,8 @@ const StarringSection: React.FC<StarringSectionProps> = ({ cast }) => {
   return (
     <div>
       <h2 className="mb-5 text-2xl font-semibold">Cast</h2>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {cast.slice(0, 8).map((castMember, key) => (
+      <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+        {cast.slice(0, 12).map((castMember, key) => (
           <CastMemberCard castMember={castMember} key={key} />
         ))}
       </div>

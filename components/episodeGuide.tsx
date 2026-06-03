@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { IoStar } from "react-icons/io5";
+import Image from "next/image";
+import { IoStar, IoChevronDown } from "react-icons/io5";
 import { SeasonEpisode } from "@/types/show";
 
 interface EpisodeGuideProps {
@@ -18,8 +19,12 @@ function formatAirdate(date?: string) {
   if (!date) return "";
   const [y, m, d] = date.split("-");
   const month = MONTHS[Number(m) - 1];
-  if (!month) return "";
-  return `${Number(d)} ${month} ${y}`;
+  return month ? `${Number(d)} ${month} ${y}` : "";
+}
+
+function stripHtml(html?: string | null) {
+  if (!html) return "";
+  return html.replace(/<[^>]+>/g, "").trim();
 }
 
 const EpisodeGuide: React.FC<EpisodeGuideProps> = ({ episodes }) => {
@@ -32,6 +37,7 @@ const EpisodeGuide: React.FC<EpisodeGuideProps> = ({ episodes }) => {
   const seasons = [...bySeason.keys()].sort((a, b) => a - b);
 
   const [active, setActive] = React.useState(seasons[0] ?? 1);
+  const [openId, setOpenId] = React.useState<number | null>(null);
 
   if (episodes.length === 0) return null;
 
@@ -65,30 +71,73 @@ const EpisodeGuide: React.FC<EpisodeGuideProps> = ({ episodes }) => {
       </div>
 
       <ul className="glass divide-y hairline overflow-hidden rounded-2xl">
-        {current.map((episode) => (
-          <li
-            key={episode.id}
-            className="flex items-center gap-4 px-4 py-3 transition hover:bg-fg/[0.04]"
-          >
-            <span className="w-12 shrink-0 font-display text-sm font-semibold tabular-nums text-accent">
-              {episode.number ? `E${episode.number}` : "—"}
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">{episode.name}</p>
-              {episode.airdate && (
-                <p className="text-xs text-muted">
-                  {formatAirdate(episode.airdate)}
-                </p>
+        {current.map((episode) => {
+          const open = openId === episode.id;
+          const summary = stripHtml(episode.summary);
+          const sub = [
+            formatAirdate(episode.airdate),
+            episode.runtime ? `${episode.runtime} min` : null,
+          ]
+            .filter(Boolean)
+            .join(" · ");
+
+          return (
+            <li key={episode.id}>
+              <button
+                type="button"
+                onClick={() => setOpenId(open ? null : episode.id)}
+                aria-expanded={open}
+                className="flex w-full items-center gap-4 px-3 py-3 text-left transition hover:bg-fg/[0.04]"
+              >
+                <span className="relative h-14 w-24 shrink-0 overflow-hidden rounded-md bg-fg/10">
+                  {episode.image?.medium ? (
+                    <Image
+                      src={episode.image.medium}
+                      alt=""
+                      fill
+                      sizes="96px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="grid h-full place-items-center font-display text-xs font-semibold text-accent">
+                      {episode.number ? `E${episode.number}` : "—"}
+                    </span>
+                  )}
+                </span>
+
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-2 text-xs">
+                    <span className="font-semibold tabular-nums text-accent">
+                      S{episode.season}E{episode.number ?? "–"}
+                    </span>
+                    {episode.rating?.average ? (
+                      <span className="flex items-center gap-0.5 text-muted">
+                        <IoStar size={10} className="text-accent" />
+                        {episode.rating.average}
+                      </span>
+                    ) : null}
+                  </span>
+                  <span className="mt-0.5 block truncate text-sm font-medium">
+                    {episode.name}
+                  </span>
+                  {sub && <span className="block text-xs text-muted">{sub}</span>}
+                </span>
+
+                <IoChevronDown
+                  className={`shrink-0 text-muted transition-transform duration-300 ${
+                    open ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {open && (
+                <div className="pb-4 pl-[124px] pr-4 text-sm leading-relaxed text-muted">
+                  {summary || "No description available for this episode."}
+                </div>
               )}
-            </div>
-            {episode.rating?.average ? (
-              <span className="flex shrink-0 items-center gap-1 text-sm text-muted">
-                <IoStar className="text-accent" size={12} />
-                {episode.rating.average}
-              </span>
-            ) : null}
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

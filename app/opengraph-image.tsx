@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "TV Bland";
+export const alt = "Dropoff";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -20,9 +20,9 @@ export default function OgImage() {
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ fontSize: 90, fontWeight: 700 }}>TV Bland</div>
+        <div style={{ fontSize: 90, fontWeight: 700 }}>Dropoff</div>
         <div style={{ fontSize: 34, opacity: 0.7, marginTop: 12 }}>
-          TV schedules, shows, cast &amp; crew
+          Is it worth your time?
         </div>
       </div>
     ),

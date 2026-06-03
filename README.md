@@ -1,32 +1,35 @@
-# TV Bland
+# Dropoff
 
-A TV listings web app — see what's on today, search shows, and dig into cast,
-crew and full episode guides. Built with Next.js and the
-[TVMaze API](https://www.tvmaze.com/api).
+**Does it drop off?** Type any TV show and get a **Worth It score**, an
+**episode-rating heatmap**, and a plain-English verdict on whether it stays good
+— and exactly when to stop watching.
 
 **Live demo:** https://tv-bland-seven.vercel.app
 
+## How it works
+
+Dropoff pulls every episode's rating from the [TVMaze API](https://www.tvmaze.com/api)
+and distils it into:
+
+- a **Worth It score (0–100)** + verdict — _Must-watch · Worth it · Mixed bag · Skip it_
+- a **drop-off trajectory** — _No drop-off · Drops off · Falls off a cliff · Gets better_
+- a **"watch through Season X"** tip when a show declines after its peak
+- an **episode heatmap** (seasons × episodes) so you can literally see the slide,
+  with the best and weakest episodes called out
+
+The score rewards shows that stay good and **stick the landing**, and penalises a
+late **drop-off** — but always with an advisory, so a great-then-declining show
+(hello, Game of Thrones) is still flagged as worth it for its strong run.
+
 ## Features
 
-- **On air today** — homepage schedule that stays current (computed per request,
-  revalidated hourly) instead of being frozen at build time
-- **Search** — instant dropdown suggestions plus a full `/search` results page
-- **Show pages** — the poster-as-background design, rating, summary, cast & crew,
-  and a season-by-season **episode guide**
-- **People** — cast members link through to person pages listing their other work
-- **Browse by genre** — filterable, rating-sorted grid
-- **Light / dark mode** — system-aware, persisted across reloads, no flash of the
-  wrong theme
-- **Polish** — skeleton loading states, custom 404 and error pages, dynamic Open
-  Graph share images, and proper SEO metadata
+- **Search** any show + **Browse** by genre
+- **Show pages**: the verdict + heatmap, cast grid, and an expandable episode guide
+- Cinematic dark-first UI, dynamic Open Graph images, and a channel-flipping logo
 
 ## Tech stack
 
-- [Next.js 16](https://nextjs.org/) (App Router) + React 19
-- TypeScript 6
-- Tailwind CSS 3
-- Vitest for unit tests
-- Deployed on Vercel
+Next.js 16 (App Router) · React 19 · TypeScript 6 · Tailwind CSS 3 · Vitest · Vercel
 
 ## Getting started
 
@@ -37,31 +40,21 @@ npm run dev
 
 Then open <http://localhost:3000>.
 
-### Scripts
-
-| Command         | Description                          |
-| --------------- | ------------------------------------ |
-| `npm run dev`   | Start the dev server                 |
-| `npm run build` | Production build                     |
-| `npm start`     | Serve the production build           |
-| `npm run lint`  | ESLint (flat config)                 |
-| `npm test`      | Run the Vitest unit tests            |
+| Command         | Description                |
+| --------------- | -------------------------- |
+| `npm run dev`   | Start the dev server       |
+| `npm run build` | Production build           |
+| `npm start`     | Serve the production build |
+| `npm run lint`  | ESLint (flat config)       |
+| `npm test`      | Vitest unit tests          |
 
 ## Notes & trade-offs
 
-- TVMaze has no genre-filter or "newest shows" endpoint, so **Browse** samples the
-  shows index and filters in-app — a representative selection, not the full catalogue.
-- `notFound()` on the dynamic show/person routes renders the 404 page but returns
-  HTTP 200 (the root layout shell streams before the not-found is thrown) — a known
-  Next.js limitation on streamed dynamic routes.
-
-## What's next
-
-- Watchlist / personalised schedule (saved to `localStorage`)
-- Browse the schedule by date, not just today
-- Component and end-to-end tests (Playwright)
+- Scoring needs at least 5 rated episodes; sparse coverage is surfaced in the verdict.
+- TVMaze has no genre-filter endpoint, so **Browse** samples the shows index.
+- `notFound()` on dynamic routes renders the 404 page but returns HTTP 200 (a known
+  Next.js streaming limitation).
 
 ## Credits
 
-TV data from the [TVMaze API](https://www.tvmaze.com/api). This project is not
-affiliated with TVMaze.
+TV data from the [TVMaze API](https://www.tvmaze.com/api). Not affiliated with TVMaze.

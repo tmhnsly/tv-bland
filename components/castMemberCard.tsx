@@ -9,31 +9,29 @@ interface CastMemberCardProps {
 
 const CastMemberCard: React.FC<CastMemberCardProps> = ({ castMember }) => {
   const { person, character } = castMember;
-  const avatar = person.image?.medium ?? "/tv-test-card-portrait.webp";
+  const photo = person.image?.medium ?? "/tv-test-card-portrait.webp";
 
   return (
-    <Link
-      href={`/person/${person.id}`}
-      className="group flex items-center gap-3 rounded-xl glass p-2 pr-4 transition hover:ring-1 hover:ring-accent/40"
-    >
-      <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full ring-1 ring-white/10">
+    <Link href={`/person/${person.id}`} className="group">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-xl ring-1 ring-white/10 shadow-lg shadow-black/30 transition duration-300 ease-spring group-hover:-translate-y-1 group-hover:ring-accent/50">
         <Image
-          src={avatar}
+          src={photo}
           alt={person.name}
           fill
-          sizes="56px"
+          sizes="(max-width: 640px) 30vw, (max-width: 1024px) 20vw, 160px"
           loading="lazy"
-          className="object-cover"
+          className="object-cover object-top transition duration-500 ease-spring group-hover:scale-105"
         />
-      </span>
-      <span className="min-w-0">
-        <span className="block truncate text-sm font-medium transition group-hover:text-accent">
-          {person.name}
-        </span>
-        <span className="block truncate text-xs text-muted">
-          {character?.name ?? "—"}
-        </span>
-      </span>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-2.5">
+          <p className="truncate text-sm font-semibold text-white">
+            {person.name}
+          </p>
+          <p className="truncate text-xs text-white/65">
+            {character?.name ?? "—"}
+          </p>
+        </div>
+      </div>
     </Link>
   );
 };
