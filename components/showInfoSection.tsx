@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import ShowInfoItem from "./showInfoItem";
 
 interface ShowInfoSectionProps {
@@ -26,8 +27,19 @@ const ShowInfoSection: React.FC<ShowInfoSectionProps> = ({ show }) => {
 
   const renderGenresContent = () => {
     if (show.genres.length > 0) {
-      const genresList = show.genres.join(", ");
-      return <>{genresList}</>;
+      return (
+        <span className="flex flex-wrap gap-2">
+          {show.genres.map((genre) => (
+            <Link
+              key={genre}
+              href={`/browse?genre=${encodeURIComponent(genre)}`}
+              className="rounded-full bg-black/10 px-2 py-0.5 text-sm transition hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
+            >
+              {genre}
+            </Link>
+          ))}
+        </span>
+      );
     } else {
       return "No genre information";
     }

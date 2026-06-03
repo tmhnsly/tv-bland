@@ -46,6 +46,12 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
               <PiTelevisionDuotone />
               <span className="ml-1 hidden font-medium sm:inline">TV Bland</span>
             </Link>
+            <Link
+              href="/browse"
+              className="shrink-0 rounded-md px-3 py-2 text-sm font-medium transition hover:bg-black/10 dark:hover:bg-white/20"
+            >
+              Browse
+            </Link>
             <SearchBox />
             <ThemeToggle />
           </nav>
