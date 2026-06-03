@@ -1,15 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Episode } from "@/types/episode";
+import { Show } from "@/types/show";
 import StarRating from "./starRating";
 
-interface EpisodeCardProps {
-  episode: Episode;
+interface ShowCardProps {
+  show: Show;
 }
 
-const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode }) => {
-  const { show } = episode;
-  const poster = show.image?.original ?? "/tv-test-card-portrait.webp";
+const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
+  const poster =
+    show.image?.original ?? show.image?.medium ?? "/tv-test-card-portrait.webp";
 
   return (
     <Link
@@ -39,4 +39,4 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode }) => {
   );
 };
 
-export default EpisodeCard;
+export default ShowCard;

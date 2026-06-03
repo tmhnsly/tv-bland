@@ -1,6 +1,7 @@
 import { Episode } from "@/types/episode";
 import { PiTelevisionDuotone } from "react-icons/pi";
-import EpisodeCard from "@/components/episodeCard";
+import ShowGrid from "@/components/showGrid";
+import { dedupeByShow } from "@/utils/dedupeByShow";
 import { getFormattedDate } from "@/utils/getCurrentDate";
 
 async function getSchedule(): Promise<Episode[]> {
@@ -19,20 +20,11 @@ async function getSchedule(): Promise<Episode[]> {
   return res.json();
 }
 
-// The daily schedule lists every airing, so a show with multiple slots would
-// otherwise repeat. Keep the first entry per show.
-function dedupeByShow(schedule: Episode[]): Episode[] {
-  const seen = new Set<number>();
-  return schedule.filter((episode) => {
-    if (!episode.show || seen.has(episode.show.id)) return false;
-    seen.add(episode.show.id);
-    return true;
-  });
-}
-
 export default async function HomePage() {
   const schedule = await getSchedule();
-  const shows = dedupeByShow(schedule).slice(0, 24);
+  const shows = dedupeByShow(schedule)
+    .slice(0, 24)
+    .map((episode) => episode.show);
 
   const today = new Date().toLocaleDateString("en-GB", {
     weekday: "long",
@@ -67,11 +59,7 @@ export default async function HomePage() {
             </span>
           </div>
           {shows.length > 0 ? (
-            <div className="grid auto-rows-auto grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-              {shows.map((episode) => (
-                <EpisodeCard episode={episode} key={episode.show.id} />
-              ))}
-            </div>
+            <ShowGrid shows={shows} />
           ) : (
             <p className="text-gray-500 dark:text-gray-400">
               No shows scheduled for today.

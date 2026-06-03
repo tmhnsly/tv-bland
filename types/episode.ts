@@ -1,13 +1,6 @@
-export type EpisodeImage = {
-  original?: string;
-  medium?: string;
-};
+import { Show } from "./show";
 
+// A schedule entry from `/schedule` — we only use the embedded show.
 export type Episode = {
-  show: {
-    id: number;
-    name: string;
-    rating: { average: number };
-    image: EpisodeImage;
-  };
+  show: Show;
 };
