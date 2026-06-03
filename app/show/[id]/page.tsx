@@ -4,6 +4,7 @@ import Image from "next/image";
 import ShowInfoSection from "@/components/showInfoSection";
 import StarringSection from "@/components/starringSection";
 import StarRating from "@/components/starRating";
+import EpisodeGuide from "@/components/episodeGuide";
 import sanitizeHtml from "sanitize-html";
 
 interface ShowPageProps {
@@ -11,9 +12,10 @@ interface ShowPageProps {
 }
 
 async function getShow(id: string) {
-  const res = await fetch(`https://api.tvmaze.com/shows/${id}?embed=cast`, {
-    next: { revalidate: 86400 },
-  });
+  const res = await fetch(
+    `https://api.tvmaze.com/shows/${id}?embed[]=cast&embed[]=episodes`,
+    { next: { revalidate: 86400 } }
+  );
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
@@ -99,9 +101,12 @@ export default async function ShowPage({ params }: ShowPageProps) {
           </div>
         </section>
         <section className="bg-white/80 dark:bg-black/80 flex flex-col justify-center gap-10 py-10 lg:py-24">
-          <div className="max-w-6xl mx-auto px-10 grid grid-cols-1 md:grid-cols-2 gap-10">
-            <ShowInfoSection show={show} />
-            <StarringSection cast={show._embedded?.cast ?? []} />
+          <div className="max-w-6xl mx-auto w-full px-10 flex flex-col gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <ShowInfoSection show={show} />
+              <StarringSection cast={show._embedded?.cast ?? []} />
+            </div>
+            <EpisodeGuide episodes={show._embedded?.episodes ?? []} />
           </div>
         </section>
       </div>
