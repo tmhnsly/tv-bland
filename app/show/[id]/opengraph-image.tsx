@@ -36,7 +36,6 @@ export default async function OgImage({
         }}
       >
         {poster ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={poster}
             width={420}
