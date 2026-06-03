@@ -13,7 +13,7 @@ type Suggestion = {
   image: string | null;
 };
 
-const SearchBox: React.FC = () => {
+const SearchBox: React.FC<{ className?: string }> = ({ className }) => {
   const router = useRouter();
   const [query, setQuery] = React.useState("");
   const [suggestions, setSuggestions] = React.useState<Suggestion[]>([]);
@@ -53,7 +53,7 @@ const SearchBox: React.FC = () => {
         if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false);
       }}
       role="search"
-      className="relative mx-1 w-full max-w-xl"
+      className={`relative ${className ?? "w-full max-w-xl"}`}
     >
       <div className="flex items-center gap-2 rounded-lg bg-fg/5 px-3 ring-1 ring-transparent transition focus-within:bg-fg/[0.07] focus-within:ring-accent/40">
         <IoSearch className="shrink-0 text-muted" aria-hidden />

@@ -1,4 +1,4 @@
-# Dropoff
+# Dropoff TV
 
 **Does it drop off?** Type any TV show and get a **Worth It score**, an
 **episode-rating heatmap**, and a plain-English verdict on whether it stays good
@@ -8,7 +8,7 @@
 
 ## How it works
 
-Dropoff pulls every episode's rating from the [TVMaze API](https://www.tvmaze.com/api)
+Dropoff TV pulls every episode's rating from the [TVMaze API](https://www.tvmaze.com/api)
 and distils it into:
 
 - a **Worth It score (0–100)** + verdict — _Must-watch · Worth it · Mixed bag · Skip it_

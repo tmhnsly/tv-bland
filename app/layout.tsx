@@ -27,13 +27,13 @@ export const metadata: Metadata = {
         : "http://localhost:3000")
   ),
   title: {
-    default: "Dropoff — is it worth your time?",
-    template: "%s · Dropoff",
+    default: "Dropoff TV — is it worth your time?",
+    template: "%s · Dropoff TV",
   },
   description:
     "Worth It scores, episode-rating heatmaps and when-to-stop advice for any TV show.",
   openGraph: {
-    title: "Dropoff — is it worth your time?",
+    title: "Dropoff TV — is it worth your time?",
     description:
       "Worth It scores, episode-rating heatmaps and when-to-stop advice for any TV show.",
     type: "website",
@@ -54,15 +54,15 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <div className="app-backdrop" aria-hidden />
 
-        <nav className="fixed inset-x-0 top-0 z-50 flex h-16 items-center gap-2 border-b hairline bg-bg/70 px-4 backdrop-blur-xl md:px-6">
+        <nav className="fixed inset-x-0 top-0 z-50 flex h-16 items-center gap-1 border-b hairline bg-bg/70 px-3 backdrop-blur-xl sm:gap-2 sm:px-5">
           <Logo />
           <Link
             href="/browse"
-            className="shrink-0 rounded-lg px-3 py-2 text-sm font-medium text-muted transition hover:bg-fg/5 hover:text-fg"
+            className="shrink-0 rounded-lg px-2.5 py-2 text-sm font-medium text-muted transition hover:bg-fg/5 hover:text-fg"
           >
             Browse
           </Link>
-          <SearchBox />
+          <SearchBox className="min-w-0 flex-1" />
           <ThemeToggle />
         </nav>
 

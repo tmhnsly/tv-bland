@@ -131,7 +131,7 @@ const EpisodeGuide: React.FC<EpisodeGuideProps> = ({ episodes }) => {
               </button>
 
               {open && (
-                <div className="pb-4 pl-[124px] pr-4 text-sm leading-relaxed text-muted">
+                <div className="px-3 pb-4 text-sm leading-relaxed text-muted sm:pl-[124px] sm:pr-4">
                   {summary || "No description available for this episode."}
                 </div>
               )}
