@@ -20,10 +20,7 @@ const VerdictCard: React.FC<VerdictCardProps> = ({ show, worthIt }) => {
     show.image?.original ?? show.image?.medium ?? "/tv-test-card-portrait.webp";
 
   return (
-    <Link
-      href={`/show/${show.id}`}
-      className="group w-36 shrink-0 snap-start sm:w-44"
-    >
+    <Link href={`/show/${show.id}`} className="group">
       <div className="relative aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10 shadow-lg shadow-black/40 transition duration-300 ease-spring group-hover:-translate-y-1 group-hover:ring-accent/50">
         <Image
           src={poster}

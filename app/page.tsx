@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Show } from "@/types/show";
 import SearchBox from "@/components/searchBox";
 import VerdictCard from "@/components/verdictCard";
-import ShowcaseRow from "@/components/showcaseRow";
 import { Container } from "@/components/layout";
 import { computeWorthIt, WorthIt } from "@/utils/worthIt";
 
@@ -61,11 +60,11 @@ function Row({
         <h2 className="text-2xl font-semibold md:text-3xl">{title}</h2>
         <p className="mt-1 text-sm text-muted">{subtitle}</p>
       </div>
-      <ShowcaseRow>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         {items.map((item) => (
           <VerdictCard key={item.show.id} show={item.show} worthIt={item.worthIt} />
         ))}
-      </ShowcaseRow>
+      </div>
     </section>
   );
 }

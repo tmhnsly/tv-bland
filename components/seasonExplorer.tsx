@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { IoChevronDown } from "react-icons/io5";
+import { IoChevronBack, IoChevronForward, IoChevronDown } from "react-icons/io5";
 import { SeasonEpisode } from "@/types/show";
 import { ratingColor } from "@/utils/ratingColor";
 
@@ -15,7 +15,6 @@ const MONTHS = [
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
-// Deterministic (no timezone) to avoid hydration mismatches.
 function formatAirdate(date?: string) {
   if (!date) return "";
   const [y, m, d] = date.split("-");
@@ -37,13 +36,21 @@ const SeasonExplorer: React.FC<SeasonExplorerProps> = ({ episodes }) => {
   const seasons = [...bySeason.keys()].sort((a, b) => a - b);
 
   const [active, setActive] = React.useState(seasons[0] ?? 1);
-  const [openId, setOpenId] = React.useState<number | null>(null);
 
   if (episodes.length === 0) return null;
 
+  const idx = Math.max(0, seasons.indexOf(active));
   const current = (bySeason.get(active) ?? []).sort(
     (a, b) => (a.number ?? 0) - (b.number ?? 0)
   );
+  const usePills = seasons.length <= 10;
+  const step = (d: number) => {
+    const next = seasons[idx + d];
+    if (next != null) setActive(next);
+  };
+
+  const stepBtn =
+    "grid h-9 w-9 shrink-0 place-items-center rounded-lg glass text-muted transition hover:text-fg disabled:opacity-40";
 
   return (
     <div>
@@ -55,27 +62,65 @@ const SeasonExplorer: React.FC<SeasonExplorerProps> = ({ episodes }) => {
         </span>
       </div>
 
-      <div className="mb-5 flex flex-wrap gap-2">
-        {seasons.map((s) => (
+      {usePills ? (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {seasons.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => setActive(s)}
+              className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
+                s === active
+                  ? "bg-accent text-accent-fg"
+                  : "glass text-muted hover:text-fg"
+              }`}
+            >
+              S{s}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="mb-4 flex items-center gap-2">
           <button
-            key={s}
             type="button"
-            onClick={() => {
-              setActive(s);
-              setOpenId(null);
-            }}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
-              s === active
-                ? "bg-accent text-accent-fg"
-                : "glass text-muted hover:text-fg"
-            }`}
+            onClick={() => step(-1)}
+            disabled={idx <= 0}
+            aria-label="Previous season"
+            className={stepBtn}
           >
-            S{s}
+            <IoChevronBack />
           </button>
-        ))}
-      </div>
+          <div className="relative">
+            <select
+              value={active}
+              onChange={(e) => setActive(Number(e.target.value))}
+              aria-label="Select season"
+              className="glass appearance-none rounded-lg py-2 pl-4 pr-9 text-sm font-medium text-fg outline-none"
+            >
+              {seasons.map((s) => (
+                <option key={s} value={s}>
+                  Season {s}
+                </option>
+              ))}
+            </select>
+            <IoChevronDown
+              size={14}
+              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => step(1)}
+            disabled={idx >= seasons.length - 1}
+            aria-label="Next season"
+            className={stepBtn}
+          >
+            <IoChevronForward />
+          </button>
+        </div>
+      )}
 
-      {/* At-a-glance: this season's episode ratings as a colour strip */}
+      {/* This season's ratings at a glance */}
       <div className="mb-4 flex gap-1" aria-hidden>
         {current.map((ep) => (
           <span
@@ -83,18 +128,17 @@ const SeasonExplorer: React.FC<SeasonExplorerProps> = ({ episodes }) => {
             title={`E${ep.number ?? "?"} · ${
               ep.rating?.average ? `★ ${ep.rating.average}` : "unrated"
             }`}
-            className="h-2 flex-1 rounded-full"
+            className="h-1.5 flex-1 rounded-full"
             style={{ backgroundColor: ratingColor(ep.rating?.average) }}
           />
         ))}
       </div>
 
-      <ul className="glass divide-y hairline overflow-hidden rounded-2xl">
+      <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
         {current.map((ep) => {
-          const open = openId === ep.id;
           const rating = ep.rating?.average ?? null;
           const summary = stripHtml(ep.summary);
-          const sub = [
+          const meta = [
             formatAirdate(ep.airdate),
             ep.runtime ? `${ep.runtime} min` : null,
           ]
@@ -102,58 +146,47 @@ const SeasonExplorer: React.FC<SeasonExplorerProps> = ({ episodes }) => {
             .join(" · ");
 
           return (
-            <li key={ep.id}>
-              <button
-                type="button"
-                onClick={() => setOpenId(open ? null : ep.id)}
-                aria-expanded={open}
-                className="flex w-full items-center gap-3 px-3 py-3 text-left transition hover:bg-fg/[0.04] sm:gap-4 sm:px-4"
-              >
-                <span className="flex w-11 shrink-0 items-center gap-2">
+            <li
+              key={ep.id}
+              className="flex flex-col overflow-hidden rounded-2xl glass sm:flex-row"
+            >
+              <div className="relative aspect-video w-full shrink-0 bg-fg/10 sm:w-40 sm:self-stretch">
+                {ep.image?.medium ? (
+                  <Image
+                    src={ep.image.medium}
+                    alt=""
+                    fill
+                    sizes="(max-width: 640px) 100vw, 160px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center py-6 font-display text-lg text-muted">
+                    E{ep.number ?? "?"}
+                  </div>
+                )}
+                <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-md bg-black/65 px-1.5 py-0.5 text-xs font-bold text-white backdrop-blur-sm">
                   <span
-                    className="h-8 w-1.5 rounded-full"
+                    className="h-1.5 w-1.5 rounded-full"
                     style={{ backgroundColor: ratingColor(rating) }}
                   />
-                  <span className="text-sm font-semibold tabular-nums">
-                    {rating ?? "–"}
-                  </span>
+                  {rating ?? "–"}
                 </span>
+              </div>
 
-                <span className="min-w-0 flex-1">
-                  <span className="block text-xs font-medium text-accent">
+              <div className="min-w-0 flex-1 p-3 sm:p-4">
+                <div className="flex flex-wrap items-center gap-x-2 text-xs">
+                  <span className="font-semibold text-accent">
                     S{ep.season} · E{ep.number ?? "?"}
                   </span>
-                  <span className="block truncate text-sm font-medium">
-                    {ep.name}
-                  </span>
-                  {sub && <span className="block text-xs text-muted">{sub}</span>}
-                </span>
-
-                <IoChevronDown
-                  className={`shrink-0 text-muted transition-transform duration-300 ${
-                    open ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {open && (
-                <div className="flex flex-col gap-3 px-3 pb-4 sm:flex-row sm:gap-4 sm:px-4 sm:pl-[60px]">
-                  {ep.image?.medium && (
-                    <span className="relative aspect-video w-full shrink-0 overflow-hidden rounded-lg bg-fg/10 sm:w-44">
-                      <Image
-                        src={ep.image.medium}
-                        alt=""
-                        fill
-                        sizes="(max-width: 640px) 100vw, 176px"
-                        className="object-cover"
-                      />
-                    </span>
-                  )}
-                  <p className="text-sm leading-relaxed text-muted">
-                    {summary || "No description available for this episode."}
-                  </p>
+                  {meta && <span className="text-muted">{meta}</span>}
                 </div>
-              )}
+                <h3 className="mt-1 text-sm font-medium leading-snug">{ep.name}</h3>
+                {summary && (
+                  <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted sm:line-clamp-3">
+                    {summary}
+                  </p>
+                )}
+              </div>
             </li>
           );
         })}
