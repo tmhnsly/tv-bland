@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PiTelevisionDuotone } from "react-icons/pi";
 import { Rubik } from "next/font/google";
 import ThemeToggle from "@/components/themeToggle";
+import SearchBox from "@/components/searchBox";
 import "./globals.css";
 
 const rubik = Rubik({ subsets: ["latin"] });
@@ -39,12 +40,13 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         <main>
           <nav className="fixed top-0 w-full flex items-center justify-between px-5 h-16 bg-white/20 dark:bg-black/20 text-black dark:text-white backdrop-blur-xl z-50 shadow-md">
             <Link
-              className="flex items-center justify-center rounded-md p-3 hover:bg-black/10 dark:hover:bg-white/20 transition"
+              className="flex shrink-0 items-center justify-center rounded-md p-3 hover:bg-black/10 dark:hover:bg-white/20 transition"
               href="/"
             >
               <PiTelevisionDuotone />
-              <span className="ml-1 font-medium">TV Bland</span>
+              <span className="ml-1 hidden font-medium sm:inline">TV Bland</span>
             </Link>
+            <SearchBox />
             <ThemeToggle />
           </nav>
           {children}
