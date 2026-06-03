@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Show } from "@/types/show";
 import ShowGrid from "@/components/showGrid";
+import { PageShell } from "@/components/layout";
 
 interface BrowsePageProps {
   searchParams: Promise<{ genre?: string }>;
@@ -43,7 +44,7 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
     .slice(0, 48);
 
   return (
-    <main className="mx-auto min-h-screen max-w-8xl px-5 pb-24 pt-28 md:px-10 md:pt-32">
+    <PageShell>
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">
         Browse
       </p>
@@ -71,6 +72,6 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
       ) : (
         <p className="text-muted">No shows found for “{genre}”.</p>
       )}
-    </main>
+    </PageShell>
   );
 }

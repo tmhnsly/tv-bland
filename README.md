@@ -4,7 +4,7 @@
 **episode-rating heatmap**, and a plain-English verdict on whether it stays good
 — and exactly when to stop watching.
 
-**Live demo:** https://tv-bland-seven.vercel.app
+**Live demo:** https://dropoff-tv.vercel.app
 
 ## How it works
 

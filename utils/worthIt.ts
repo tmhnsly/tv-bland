@@ -1,6 +1,6 @@
 import { SeasonEpisode } from "@/types/show";
 
-export type Trajectory = "rising" | "steady" | "tapers" | "cliff";
+export type Trajectory = "rising" | "steady" | "dips" | "tapers" | "cliff";
 export type Verdict = "must-watch" | "worth-it" | "mixed" | "skip";
 
 export interface SeasonStat {
@@ -49,6 +49,7 @@ const VERDICT_LABELS: Record<Verdict, string> = {
 const TRAJECTORY_LABELS: Record<Trajectory, string> = {
   rising: "Gets better",
   steady: "No drop-off",
+  dips: "Dips late",
   tapers: "Drops off",
   cliff: "Falls off a cliff",
 };
@@ -56,6 +57,22 @@ const TRAJECTORY_LABELS: Record<Trajectory, string> = {
 const round1 = (n: number) => Math.round(n * 10) / 10;
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+
+// Least-squares slope of values against their index (rating points per season).
+// More robust to a single weak season than comparing first vs last.
+function regressionSlope(ys: number[]): number {
+  const n = ys.length;
+  if (n < 2) return 0;
+  const mx = (n - 1) / 2;
+  const my = mean(ys);
+  let num = 0;
+  let den = 0;
+  for (let i = 0; i < n; i++) {
+    num += (i - mx) * (ys[i] - my);
+    den += (i - mx) ** 2;
+  }
+  return den === 0 ? 0 : num / den;
+}
 
 function emptyResult(total: number, rated: number): WorthIt {
   return {
@@ -121,16 +138,19 @@ export function computeWorthIt(episodes: SeasonEpisode[]): WorthIt {
   const multiSeason = seasons.length > 1;
 
   const dropFromPeak = round1(Math.max(0, peakSeason.average - finaleSeason.average));
-  const sticksLanding = multiSeason && finaleSeason.average >= peakSeason.average - 0.3;
-  const slope = multiSeason
-    ? (finaleSeason.average - seasons[0].average) / (seasons.length - 1)
-    : 0;
+  const finaleAvg = finaleSeason.average;
+  const sticksLanding = multiSeason && finaleAvg >= peakSeason.average - 0.3;
+  const slope = multiSeason ? regressionSlope(seasons.map((s) => s.average)) : 0;
 
+  // Quality-gated: a decline only counts as a drop-off if the show actually
+  // gets worse, not just dips a little while staying good.
   let trajectory: Trajectory;
   if (!multiSeason) trajectory = "steady";
-  else if (slope >= 0.25) trajectory = "rising";
-  else if (dropFromPeak >= 2 || slope <= -0.6) trajectory = "cliff";
-  else if (dropFromPeak >= 0.8 || slope <= -0.2) trajectory = "tapers";
+  else if (slope >= 0.12) trajectory = "rising";
+  else if (dropFromPeak >= 2 && finaleAvg < 7) trajectory = "cliff";
+  else if ((dropFromPeak >= 1.5 || slope <= -0.25) && finaleAvg < 7.5)
+    trajectory = "tapers";
+  else if (dropFromPeak >= 0.8 || slope <= -0.12) trajectory = "dips";
   else trajectory = "steady";
 
   const quality = (avg / 10) * 100;
@@ -144,7 +164,7 @@ export function computeWorthIt(episodes: SeasonEpisode[]): WorthIt {
 
   // Where to stop, when there's a real decline after the peak.
   let watchThrough: number | null = null;
-  if (dropFromPeak >= 1 && seasons.length > 2) {
+  if ((trajectory === "tapers" || trajectory === "cliff") && seasons.length > 2) {
     const strong = seasons.filter((s) => s.average >= peakSeason.average - 0.75);
     const last = strong[strong.length - 1];
     if (last && last.season < finaleSeason.season) watchThrough = last.season;
@@ -211,6 +231,9 @@ function buildAdvisory(d: {
   }
   if (trajectory === "rising") {
     return `A grower — it gets better as it goes, peaking at Season ${peakSeason.season} (avg ${peakSeason.average}). Stick with it.`;
+  }
+  if (trajectory === "dips") {
+    return `Dips a little later on (down to ${finaleSeason.average} by the end) but stays good throughout — worth it the whole way.`;
   }
   if (sticksLanding) {
     return `Stays strong the whole way and sticks the landing (finale avg ${finaleSeason.average}). The good kind of binge.`;

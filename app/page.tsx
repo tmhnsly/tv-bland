@@ -2,10 +2,11 @@ import Image from "next/image";
 import { Show } from "@/types/show";
 import SearchBox from "@/components/searchBox";
 import VerdictCard from "@/components/verdictCard";
+import ShowcaseRow from "@/components/showcaseRow";
+import { Container } from "@/components/layout";
 import { computeWorthIt, WorthIt } from "@/utils/worthIt";
 
-// A hand-picked mix of shows people argue about — the data decides which row
-// each lands in.
+// A hand-picked mix of shows people argue about — the data decides the row.
 const SHOWCASE = [
   "Breaking Bad",
   "The Wire",
@@ -60,26 +61,26 @@ function Row({
         <h2 className="text-2xl font-semibold md:text-3xl">{title}</h2>
         <p className="mt-1 text-sm text-muted">{subtitle}</p>
       </div>
-      <div className="-mx-5 flex snap-x gap-4 overflow-x-auto px-5 pb-4 md:-mx-10 md:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <ShowcaseRow>
         {items.map((item) => (
           <VerdictCard key={item.show.id} show={item.show} worthIt={item.worthIt} />
         ))}
-      </div>
+      </ShowcaseRow>
     </section>
   );
 }
 
 export default async function HomePage() {
   const showcase = await getShowcase();
-  const stuck = showcase
-    .filter((x) => x.worthIt.trajectory === "steady" || x.worthIt.trajectory === "rising")
+  const holdsUp = showcase
+    .filter((x) => ["steady", "rising", "dips"].includes(x.worthIt.trajectory))
     .sort((a, b) => b.worthIt.score - a.worthIt.score);
   const dropoffs = showcase
-    .filter((x) => x.worthIt.trajectory === "tapers" || x.worthIt.trajectory === "cliff")
+    .filter((x) => ["tapers", "cliff"].includes(x.worthIt.trajectory))
     .sort((a, b) => b.worthIt.dropFromPeak - a.worthIt.dropFromPeak);
 
   const heroPoster =
-    (stuck[0] ?? dropoffs[0])?.show.image?.original ?? null;
+    (holdsUp[0] ?? dropoffs[0])?.show.image?.original ?? null;
 
   return (
     <main>
@@ -101,7 +102,7 @@ export default async function HomePage() {
 
         <div className="mx-auto max-w-3xl px-5 pb-14 pt-32 text-center sm:pt-40 md:pt-44">
           <p className="reveal text-xs font-semibold uppercase tracking-[0.32em] text-accent">
-            Dropoff TV
+            Dropoff
           </p>
           <h1 className="reveal mt-4 font-display text-4xl font-semibold sm:text-5xl md:text-7xl">
             Does it drop off?
@@ -117,23 +118,23 @@ export default async function HomePage() {
             className="reveal mt-8 flex justify-center"
             style={{ animationDelay: "140ms" }}
           >
-            <SearchBox className="w-full max-w-xl" />
+            <SearchBox className="w-full max-w-xl" variant="hero" />
           </div>
         </div>
       </section>
 
-      <section className="mx-auto flex max-w-8xl flex-col gap-12 px-5 pb-24 md:px-10">
+      <Container className="flex flex-col gap-12 pb-24 md:gap-16">
         <Row
-          title="Stuck the landing"
-          subtitle="Great the whole way through — no real drop-off."
-          items={stuck}
+          title="Holds up"
+          subtitle="Great the whole way through — little to no drop-off."
+          items={holdsUp}
         />
         <Row
           title="Famous drop-offs"
           subtitle="Started strong, then slid. Worth it — if you know where to stop."
           items={dropoffs}
         />
-      </section>
+      </Container>
     </main>
   );
 }

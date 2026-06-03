@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Show } from "@/types/show";
 import ShowGrid from "@/components/showGrid";
+import { PageShell } from "@/components/layout";
 
 interface PersonPageProps {
   params: Promise<{ id: string }>;
@@ -65,7 +66,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
     .join(" · ");
 
   return (
-    <main className="mx-auto min-h-screen max-w-8xl px-5 pb-24 pt-28 md:px-10 md:pt-32">
+    <PageShell>
       <div className="reveal mb-12 flex items-center gap-5">
         <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full ring-1 ring-white/15 shadow-xl shadow-black/40 md:h-28 md:w-28">
           <Image
@@ -90,6 +91,6 @@ export default async function PersonPage({ params }: PersonPageProps) {
       ) : (
         <p className="text-muted">No credits available.</p>
       )}
-    </main>
+    </PageShell>
   );
 }

@@ -5,9 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import StarringSection from "@/components/starringSection";
 import StarRating from "@/components/starRating";
-import EpisodeGuide from "@/components/episodeGuide";
-import EpisodeHeatmap from "@/components/episodeHeatmap";
+import SeasonTrendChart from "@/components/seasonTrendChart";
+import SeasonExplorer from "@/components/seasonExplorer";
 import WorthItVerdict from "@/components/worthItVerdict";
+import { Container } from "@/components/layout";
 import { computeWorthIt } from "@/utils/worthIt";
 import sanitizeHtml from "sanitize-html";
 
@@ -145,12 +146,12 @@ export default async function ShowPage({ params }: ShowPageProps) {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-6xl flex-col gap-14 px-5 pb-24 pt-12 md:px-10">
+      <Container className="flex flex-col gap-12 pb-24 pt-12 md:gap-16">
         <WorthItVerdict worthIt={worthIt} />
-        <EpisodeHeatmap episodes={episodes} />
+        <SeasonTrendChart worthIt={worthIt} />
+        <SeasonExplorer episodes={episodes} />
         <StarringSection cast={show._embedded?.cast ?? []} />
-        <EpisodeGuide episodes={episodes} />
-      </div>
+      </Container>
     </main>
   );
 }

@@ -20,7 +20,7 @@ const Logo: React.FC = () => {
         className="tv-screen h-6 w-8 ring-1 ring-black/30"
       />
       <span className="hidden font-display text-lg font-semibold tracking-tight sm:inline">
-        Dropoff TV
+        Dropoff
       </span>
     </Link>
   );

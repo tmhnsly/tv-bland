@@ -47,6 +47,15 @@ describe("computeWorthIt", () => {
     expect(r.advisory.toLowerCase()).toContain("season 4");
   });
 
+  it("treats a mild late dip on a still-good show as 'dips', not a drop-off", () => {
+    const eps = [...season(1, 5, 9), ...season(2, 5, 9), ...season(3, 5, 8)];
+    const r = computeWorthIt(eps);
+    expect(r.trajectory).toBe("dips");
+    expect(r.verdict).not.toBe("skip");
+    expect(r.watchThrough).toBeNull();
+    expect(r.score).toBeGreaterThanOrEqual(70);
+  });
+
   it("detects a show that gets better over time", () => {
     const eps = [...season(1, 5, 6), ...season(2, 5, 7), ...season(3, 5, 9)];
     const r = computeWorthIt(eps);

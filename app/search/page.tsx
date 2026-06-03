@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Show } from "@/types/show";
 import ShowGrid from "@/components/showGrid";
+import { PageShell } from "@/components/layout";
 
 interface SearchPageProps {
   searchParams: Promise<{ q?: string }>;
@@ -29,7 +30,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const shows = query ? await searchShows(query) : [];
 
   return (
-    <main className="mx-auto min-h-screen max-w-8xl px-5 pb-24 pt-28 md:px-10 md:pt-32">
+    <PageShell>
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">
         Search
       </p>
@@ -55,6 +56,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           </p>
         )}
       </div>
-    </main>
+    </PageShell>
   );
 }

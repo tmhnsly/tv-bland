@@ -13,7 +13,10 @@ type Suggestion = {
   image: string | null;
 };
 
-const SearchBox: React.FC<{ className?: string }> = ({ className }) => {
+const SearchBox: React.FC<{ className?: string; variant?: "nav" | "hero" }> = ({
+  className,
+  variant = "nav",
+}) => {
   const router = useRouter();
   const [query, setQuery] = React.useState("");
   const [suggestions, setSuggestions] = React.useState<Suggestion[]>([]);
@@ -55,8 +58,18 @@ const SearchBox: React.FC<{ className?: string }> = ({ className }) => {
       role="search"
       className={`relative ${className ?? "w-full max-w-xl"}`}
     >
-      <div className="flex items-center gap-2 rounded-lg bg-fg/5 px-3 ring-1 ring-transparent transition focus-within:bg-fg/[0.07] focus-within:ring-accent/40">
-        <IoSearch className="shrink-0 text-muted" aria-hidden />
+      <div
+        className={`flex items-center rounded-xl ring-1 transition ${
+          variant === "hero"
+            ? "gap-3 bg-fg/[0.06] px-4 shadow-xl shadow-black/30 ring-fg/15 focus-within:ring-accent/60"
+            : "gap-2 bg-fg/5 px-3 ring-fg/10 focus-within:bg-fg/[0.07] focus-within:ring-accent/40"
+        }`}
+      >
+        <IoSearch
+          size={variant === "hero" ? 20 : 16}
+          className="shrink-0 text-muted"
+          aria-hidden
+        />
         <input
           type="search"
           value={query}
@@ -65,9 +78,11 @@ const SearchBox: React.FC<{ className?: string }> = ({ className }) => {
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          placeholder="Search shows…"
+          placeholder="Search any show…"
           aria-label="Search shows"
-          className="w-full bg-transparent py-2 text-sm text-fg outline-none placeholder:text-muted"
+          className={`w-full bg-transparent text-fg outline-none placeholder:text-muted ${
+            variant === "hero" ? "py-3.5 text-base" : "py-2 text-sm"
+          }`}
         />
       </div>
 
