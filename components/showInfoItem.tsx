@@ -2,7 +2,7 @@ import React from "react";
 
 interface ShowInfoItemProps {
   title: string;
-  content: string | JSX.Element;
+  content: React.ReactNode;
 }
 
 const ShowInfoItem: React.FC<ShowInfoItemProps> = ({ title, content }) => {

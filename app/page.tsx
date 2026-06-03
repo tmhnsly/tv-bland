@@ -3,11 +3,13 @@ import { PiTelevisionDuotone } from "react-icons/pi";
 import EpisodeCard from "@/components/episodeCard";
 import { getFormattedDate } from "@/utils/getCurrentDate";
 
-const currentDate = getFormattedDate();
-
-async function getSchedule() {
+async function getSchedule(): Promise<Episode[]> {
+  // Compute the date per request so the schedule rolls over with the calendar,
+  // and revalidate hourly so Next doesn't freeze the response at build time.
+  const currentDate = getFormattedDate();
   const res = await fetch(
-    `https://api.tvmaze.com/schedule?&date=${currentDate}`
+    `https://api.tvmaze.com/schedule?country=US&date=${currentDate}`,
+    { next: { revalidate: 3600 } }
   );
 
   if (!res.ok) {
@@ -17,34 +19,66 @@ async function getSchedule() {
   return res.json();
 }
 
-const HomePage: React.FC = async ({}) => {
+// The daily schedule lists every airing, so a show with multiple slots would
+// otherwise repeat. Keep the first entry per show.
+function dedupeByShow(schedule: Episode[]): Episode[] {
+  const seen = new Set<number>();
+  return schedule.filter((episode) => {
+    if (!episode.show || seen.has(episode.show.id)) return false;
+    seen.add(episode.show.id);
+    return true;
+  });
+}
+
+export default async function HomePage() {
   const schedule = await getSchedule();
+  const shows = dedupeByShow(schedule).slice(0, 24);
+
+  const today = new Date().toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
-    <div className="bg-home bg-cover text-black dark:text-white">
-      <div className="flex flex-col bg-gray-200/90 dark:bg-gray-900/90 px-10 md:px-16 pb-16 pt-32 backdrop-blur-3xl">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex gap-2">
-            <h1 className="text-4xl">TV Bland</h1>
-            <PiTelevisionDuotone size={"36"} />
+    <div className="bg-home bg-cover bg-center text-black dark:text-white">
+      <header className="bg-gray-200/80 backdrop-blur-2xl dark:bg-gray-900/80">
+        <div className="mx-auto max-w-7xl px-6 pb-20 pt-32 md:px-10">
+          <div className="flex items-center gap-3">
+            <PiTelevisionDuotone size={48} />
+            <h1 className="text-5xl font-semibold tracking-tight md:text-6xl">
+              TV Bland
+            </h1>
           </div>
-          <span>
-            TV Show and web series database. Create personalised schedules.
-            Episode guide, cast, crew and character information.
-          </span>
+          <p className="mt-5 max-w-2xl text-lg text-gray-700 dark:text-gray-300">
+            Your TV show and web-series companion — episode guides, cast and
+            crew, and what&apos;s on the air right now.
+          </p>
         </div>
-      </div>
-      <div className="px-5 py-10 mx-auto content-center bg-white/90 dark:bg-black/90 backdrop-blur-3xl backdrop-brightness-125 dark:backdrop-brightness-75">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="mb-5">Last added shows</h2>
-          <div className="grid auto-rows-auto gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-            {schedule.slice(0, 20).map((episode: Episode, key: number) => {
-              return <EpisodeCard episode={episode} key={key} />;
-            })}
+      </header>
+
+      <section className="bg-white/90 backdrop-blur-2xl dark:bg-black/90">
+        <div className="mx-auto max-w-7xl px-6 py-12 md:px-10">
+          <div className="mb-8 flex items-baseline justify-between gap-4">
+            <h2 className="text-2xl font-medium">On air today</h2>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {today}
+            </span>
           </div>
+          {shows.length > 0 ? (
+            <div className="grid auto-rows-auto grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              {shows.map((episode) => (
+                <EpisodeCard episode={episode} key={episode.show.id} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400">
+              No shows scheduled for today.
+            </p>
+          )}
         </div>
-      </div>
+      </section>
     </div>
   );
-};
-
-export default HomePage;
+}

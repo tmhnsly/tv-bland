@@ -1,12 +1,19 @@
 import React from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import ShowInfoSection from "@/components/showInfoSection";
 import StarringSection from "@/components/starringSection";
 import StarRating from "@/components/starRating";
 import sanitizeHtml from "sanitize-html";
 
+interface ShowPageProps {
+  params: Promise<{ id: string }>;
+}
+
 async function getShow(id: string) {
-  const res = await fetch(`https://api.tvmaze.com/shows/${id}?embed=cast`);
+  const res = await fetch(`https://api.tvmaze.com/shows/${id}?embed=cast`, {
+    next: { revalidate: 86400 },
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
@@ -15,8 +22,29 @@ async function getShow(id: string) {
   return res.json();
 }
 
-export default async function ShowPage({ params }: any) {
-  const show = await getShow(params.id);
+export async function generateMetadata({
+  params,
+}: ShowPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const show = await getShow(id);
+  const description = show.summary
+    ? sanitizeHtml(show.summary, { allowedTags: [], allowedAttributes: {} })
+    : "Cast, crew, episode guide and character information.";
+
+  return {
+    title: show.name ?? "Show",
+    description,
+    openGraph: {
+      title: show.name ?? "Show",
+      description,
+      images: show.image?.original ? [{ url: show.image.original }] : undefined,
+    },
+  };
+}
+
+export default async function ShowPage({ params }: ShowPageProps) {
+  const { id } = await params;
+  const show = await getShow(id);
 
   const backgroundImage =
     show.image && show.image.medium
@@ -36,18 +64,19 @@ export default async function ShowPage({ params }: any) {
                 src={
                   show.image && show.image.original
                     ? show.image.original
-                    : "/tv-test-card-portrait.webp)"
+                    : "/tv-test-card-portrait.webp"
                 }
                 alt={`${show.name} poster`}
                 height={600}
                 width={400}
                 priority
+                className="rounded-lg"
               />
             </div>
             <div className="backdrop-blur-sm text-black dark:text-white bg-white/70 dark:bg-black/70 lg:max-w-xl w-full h-fit p-5 flex flex-col gap-5 rounded-lg self-center">
               <div className="flex items-center gap-2">
-                <StarRating rating={show.rating.average} />
-                {show.rating.average ? (
+                <StarRating rating={show.rating?.average ?? 0} />
+                {show.rating?.average ? (
                   <span className="font-bold text-black dark:text-white">
                     {(show.rating.average / 2).toFixed(1)}/5
                   </span>
@@ -72,7 +101,7 @@ export default async function ShowPage({ params }: any) {
         <section className="bg-white/80 dark:bg-black/80 flex flex-col justify-center gap-10 py-10 lg:py-24">
           <div className="max-w-6xl mx-auto px-10 grid grid-cols-1 md:grid-cols-2 gap-10">
             <ShowInfoSection show={show} />
-            <StarringSection cast={show._embedded.cast} />
+            <StarringSection cast={show._embedded?.cast ?? []} />
           </div>
         </section>
       </div>

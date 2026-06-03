@@ -23,7 +23,7 @@ const CastMemberCard: React.FC<CastMemberCardProps> = ({ castMember }) => {
           }
           alt={castMember.person.name}
           fill
-          sizes="(max-width: 80px) 100vw"
+          sizes="80px"
           loading="lazy"
           className="object-cover"
         />

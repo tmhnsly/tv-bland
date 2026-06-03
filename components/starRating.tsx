@@ -6,7 +6,7 @@ interface StarRatingProps {
   className?: string;
 }
 
-export const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
+export const StarRating: React.FC<StarRatingProps> = ({ rating, className }) => {
   // Calculate the number of full stars to display
   const fullStarsCount = Math.floor(rating / 2);
 
@@ -38,7 +38,7 @@ export const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
 
   // Return the component with filled stars overlaying the empty stars
   return (
-    <div className="relative flex text-2xl">
+    <div className={`relative flex ${className ?? "text-2xl"}`}>
       <div className="absolute flex">{filledStars}</div>
       <div className="flex">{emptyStars}</div>
     </div>

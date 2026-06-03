@@ -8,31 +8,32 @@ interface EpisodeCardProps {
 }
 
 const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode }) => {
+  const { show } = episode;
+  const poster = show.image?.original ?? "/tv-test-card-portrait.webp";
+
   return (
     <Link
-      href={`/show/${episode.show.id}`}
-      className="rounded-lg transition duration-200 p-3 gap-3 flex flex-col hover:scale-110 hover:bg-gray-200/50 hover:shadow-xl"
+      href={`/show/${show.id}`}
+      className="group flex flex-col gap-3 rounded-xl p-2 transition duration-200 hover:bg-black/5 hover:shadow-xl dark:hover:bg-white/5"
     >
-      <div className="relative aspect-[3/4] rounded-lg overflow-hidden">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-lg ring-1 ring-black/5 dark:ring-white/10">
         <Image
-          src={
-            episode.show.image && episode.show.image.original
-              ? episode.show.image.original
-              : "/tv-test-card-portrait.webp"
-          }
+          src={poster}
           fill
-          sizes="(max-width: 300px)"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
           loading="lazy"
-          alt={`${episode.show.name} poster`}
-          className="object-cover"
+          alt={`${show.name} poster`}
+          className="object-cover transition duration-300 group-hover:scale-105"
         />
       </div>
-      <div className="flex flex-col flex-grow gap-2">
+      <div className="flex flex-col gap-1">
         <StarRating
-          rating={episode.show.rating.average ? episode.show.rating.average : 0}
-          className="hidden md:visible"
+          rating={show.rating?.average ?? 0}
+          className="hidden text-lg md:flex"
         />
-        <span>{episode.show.name}</span>
+        <span className="text-sm font-medium leading-snug line-clamp-2">
+          {show.name}
+        </span>
       </div>
     </Link>
   );
