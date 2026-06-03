@@ -2,7 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import ShowInfoSection from "@/components/showInfoSection";
+import Link from "next/link";
 import StarringSection from "@/components/starringSection";
 import StarRating from "@/components/starRating";
 import EpisodeGuide from "@/components/episodeGuide";
@@ -38,10 +38,7 @@ export async function generateMetadata({
   return {
     title: show.name ?? "Show",
     description,
-    openGraph: {
-      title: show.name ?? "Show",
-      description,
-    },
+    openGraph: { title: show.name ?? "Show", description },
   };
 }
 
@@ -49,68 +46,105 @@ export default async function ShowPage({ params }: ShowPageProps) {
   const { id } = await params;
   const show = await getShow(id);
 
-  const backgroundImage =
-    show.image && show.image.medium
-      ? `url(${show.image.medium})`
-      : `url(/tv-test-card-portrait.webp)`;
+  const poster =
+    show.image?.original ??
+    show.image?.medium ??
+    "/tv-test-card-portrait.webp";
+  const rating: number | null = show.rating?.average ?? null;
+
+  const runtime = show.averageRuntime ?? show.runtime;
+  const meta = [
+    show.premiered ? show.premiered.slice(0, 4) : null,
+    show.network?.name ?? show.webChannel?.name ?? null,
+    runtime ? `${runtime} min` : null,
+    show.status,
+  ].filter(Boolean);
 
   return (
-    <div
-      className="min-h-screen bg-fixed bg-center bg-no-repeat bg-cover"
-      style={{ backgroundImage }}
-    >
-      <div className="backdrop-blur-3xl backdrop-brightness-125 dark:backdrop-brightness-75 pb-8 min-h-screen">
-        <section className="px-5 flex flex-col gap-5 items-center">
-          <div className="flex flex-col items-center pt-20 pb-5 gap-5 md:flex-row justify-center lg:translate-y-16 lg:pt-5">
-            <div className="relative w-full h-auto max-w-sm">
+    <main className="relative">
+      <div className="fixed inset-0 -z-10">
+        <Image
+          src={poster}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="scale-110 object-cover blur-2xl brightness-[0.3]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-bg/60 via-bg/85 to-bg" />
+      </div>
+
+      <div className="mx-auto max-w-6xl px-5 pb-24 pt-28 md:px-10 md:pt-36">
+        <div className="flex flex-col gap-8 md:flex-row md:gap-10">
+          <div className="reveal mx-auto w-full max-w-[240px] shrink-0 md:mx-0 md:w-60">
+            <div className="relative aspect-[2/3] overflow-hidden rounded-2xl ring-1 ring-white/15 shadow-2xl shadow-black/60">
               <Image
-                src={
-                  show.image && show.image.original
-                    ? show.image.original
-                    : "/tv-test-card-portrait.webp"
-                }
+                src={poster}
                 alt={`${show.name} poster`}
-                height={600}
-                width={400}
+                fill
                 priority
-                className="rounded-lg"
+                sizes="240px"
+                className="object-cover"
               />
             </div>
-            <div className="backdrop-blur-sm text-black dark:text-white bg-white/70 dark:bg-black/70 lg:max-w-xl w-full h-fit p-5 flex flex-col gap-5 rounded-lg self-center">
-              <div className="flex items-center gap-2">
-                <StarRating rating={show.rating?.average ?? 0} />
-                {show.rating?.average ? (
-                  <span className="font-bold text-black dark:text-white">
-                    {(show.rating.average / 2).toFixed(1)}/5
-                  </span>
-                ) : (
-                  <span>No ratings</span>
-                )}
-              </div>
+          </div>
 
-              <h1>{show.name ? show.name : "Name not available"}</h1>
-              {show.summary ? (
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizeHtml(show.summary),
-                  }}
-                />
-              ) : (
-                "Summary not available"
-              )}
+          <div
+            className="reveal min-w-0 flex-1"
+            style={{ animationDelay: "70ms" }}
+          >
+            <h1 className="font-display text-4xl font-semibold md:text-6xl">
+              {show.name ?? "Name not available"}
+            </h1>
+
+            {meta.length > 0 && (
+              <p className="mt-4 flex flex-wrap items-center gap-x-2 text-sm text-muted">
+                {meta.map((item: string, i: number) => (
+                  <React.Fragment key={i}>
+                    {i > 0 && <span className="text-fg/25">·</span>}
+                    <span>{item}</span>
+                  </React.Fragment>
+                ))}
+              </p>
+            )}
+
+            <div className="mt-5 flex items-center gap-3">
+              <StarRating rating={rating ?? 0} className="flex text-xl" />
+              <span className="text-sm font-semibold">
+                {rating ? `${(rating / 2).toFixed(1)} / 5` : "Not yet rated"}
+              </span>
             </div>
+
+            {show.genres?.length > 0 && (
+              <div className="mt-5 flex flex-wrap gap-2">
+                {show.genres.map((genre: string) => (
+                  <Link
+                    key={genre}
+                    href={`/browse?genre=${encodeURIComponent(genre)}`}
+                    className="rounded-full glass px-3 py-1 text-xs font-medium text-muted transition hover:text-fg"
+                  >
+                    {genre}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {show.summary ? (
+              <div
+                className="prose-summary mt-6 max-w-2xl"
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(show.summary) }}
+              />
+            ) : (
+              <p className="mt-6 text-muted">Summary not available.</p>
+            )}
           </div>
-        </section>
-        <section className="bg-white/80 dark:bg-black/80 flex flex-col justify-center gap-10 py-10 lg:py-24">
-          <div className="max-w-6xl mx-auto w-full px-10 flex flex-col gap-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-              <ShowInfoSection show={show} />
-              <StarringSection cast={show._embedded?.cast ?? []} />
-            </div>
-            <EpisodeGuide episodes={show._embedded?.episodes ?? []} />
-          </div>
-        </section>
+        </div>
+
+        <div className="mt-16 flex flex-col gap-14">
+          <StarringSection cast={show._embedded?.cast ?? []} />
+          <EpisodeGuide episodes={show._embedded?.episodes ?? []} />
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -44,7 +44,7 @@ const ThemeToggle: React.FC = () => {
       type="button"
       onClick={toggle}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="p-3 flex items-center justify-center rounded-md hover:bg-black/10 dark:hover:bg-white/20 transition"
+      className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-muted transition hover:bg-fg/5 hover:text-fg"
     >
       {isDark ? <IoSunny /> : <IoMoon />}
     </button>

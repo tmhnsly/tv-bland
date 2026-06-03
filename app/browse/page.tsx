@@ -8,8 +8,8 @@ interface BrowsePageProps {
 }
 
 // TVMaze has no "shows by genre" endpoint, so we pull the first couple of
-// index pages and filter in-app. This is a representative sample, not the
-// full catalogue (documented limitation).
+// index pages and filter in-app — a representative sample, not the full
+// catalogue (documented limitation).
 async function getShows(): Promise<Show[]> {
   const pages = await Promise.all(
     [0, 1].map((page) =>
@@ -29,10 +29,8 @@ export async function generateMetadata({
 }
 
 const chip = (active: boolean) =>
-  `rounded-full px-3 py-1 text-sm transition ${
-    active
-      ? "bg-black text-white dark:bg-white dark:text-black"
-      : "bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
+  `rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
+    active ? "bg-accent text-accent-fg" : "glass text-muted hover:text-fg"
   }`;
 
 export default async function BrowsePage({ searchParams }: BrowsePageProps) {
@@ -45,31 +43,34 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
     .slice(0, 48);
 
   return (
-    <div className="min-h-screen px-6 pb-16 pt-24 text-black dark:text-white md:px-10">
-      <div className="mx-auto max-w-7xl">
-        <h1 className="mb-6">Browse</h1>
-        <div className="mb-8 flex flex-wrap gap-2">
-          <Link href="/browse" className={chip(!genre)}>
-            All
+    <main className="mx-auto min-h-screen max-w-8xl px-5 pb-24 pt-28 md:px-10 md:pt-32">
+      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">
+        Browse
+      </p>
+      <h1 className="mt-3 font-display text-4xl font-semibold md:text-5xl">
+        {genre ?? "Top rated"}
+      </h1>
+
+      <div className="my-8 flex flex-wrap gap-2">
+        <Link href="/browse" className={chip(!genre)}>
+          All
+        </Link>
+        {genres.map((g) => (
+          <Link
+            key={g}
+            href={`/browse?genre=${encodeURIComponent(g)}`}
+            className={chip(g === genre)}
+          >
+            {g}
           </Link>
-          {genres.map((g) => (
-            <Link
-              key={g}
-              href={`/browse?genre=${encodeURIComponent(g)}`}
-              className={chip(g === genre)}
-            >
-              {g}
-            </Link>
-          ))}
-        </div>
-        {shows.length > 0 ? (
-          <ShowGrid shows={shows} />
-        ) : (
-          <p className="text-gray-500 dark:text-gray-400">
-            No shows found for “{genre}”.
-          </p>
-        )}
+        ))}
       </div>
-    </div>
+
+      {shows.length > 0 ? (
+        <ShowGrid shows={shows} />
+      ) : (
+        <p className="text-muted">No shows found for “{genre}”.</p>
+      )}
+    </main>
   );
 }

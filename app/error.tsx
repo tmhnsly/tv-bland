@@ -9,26 +9,28 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center text-black dark:text-white">
-      <h1>Something went wrong</h1>
-      <p className="text-gray-500 dark:text-gray-400">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center">
+      <h1 className="font-display text-3xl font-semibold">
+        Something went wrong
+      </h1>
+      <p className="max-w-sm text-muted">
         An unexpected error occurred. Please try again.
       </p>
-      <div className="mt-2 flex gap-3">
+      <div className="mt-3 flex gap-3">
         <button
           type="button"
           onClick={reset}
-          className="rounded-md bg-black/10 px-4 py-2 transition hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
+          className="rounded-lg bg-accent px-5 py-2.5 font-medium text-accent-fg transition hover:opacity-90"
         >
           Try again
         </button>
         <Link
           href="/"
-          className="rounded-md px-4 py-2 transition hover:bg-black/5 dark:hover:bg-white/5"
+          className="rounded-lg glass px-5 py-2.5 font-medium transition hover:bg-fg/5"
         >
           Home
         </Link>
       </div>
-    </div>
+    </main>
   );
 }

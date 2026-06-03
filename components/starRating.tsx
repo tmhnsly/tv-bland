@@ -12,8 +12,8 @@ export const StarRating: React.FC<StarRatingProps> = ({
   className,
 }) => {
   const { full, half, empty } = getStarCounts(rating);
-  const filled = "text-yellow-400 dark:text-yellow-500";
-  const outline = "text-black/30 dark:text-white/30";
+  const filled = "text-accent";
+  const outline = "text-fg/20";
 
   return (
     <div className={className ?? "flex text-2xl"}>

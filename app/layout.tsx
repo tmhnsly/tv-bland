@@ -2,12 +2,22 @@ import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PiTelevisionDuotone } from "react-icons/pi";
-import { Rubik } from "next/font/google";
+import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
 import ThemeToggle from "@/components/themeToggle";
 import SearchBox from "@/components/searchBox";
 import "./globals.css";
 
-const rubik = Rubik({ subsets: ["latin"] });
+const display = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const sans = Hanken_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -18,48 +28,53 @@ export const metadata: Metadata = {
   ),
   title: {
     default: "TV Bland",
-    template: "%s | TV Bland",
+    template: "%s · TV Bland",
   },
   description:
-    "TV Show and web series database. Create personalised schedules. Episode guide, cast, crew and character information.",
+    "A cinematic TV companion — what's on now, full episode guides, cast and crew.",
   openGraph: {
     title: "TV Bland",
     description:
-      "TV Show and web series database. Episode guide, cast, crew and character information.",
+      "A cinematic TV companion — what's on now, full episode guides, cast and crew.",
     type: "website",
   },
 };
 
-// Runs before paint so the correct theme is applied on first render (no flash).
-const themeScript = `(function(){try{var t=localStorage.getItem("theme");var d=t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d);}catch(e){}})();`;
+// Dark-first: apply dark unless the visitor has explicitly chosen light.
+const themeScript = `(function(){try{var t=localStorage.getItem("theme");document.documentElement.classList.toggle("dark",t!=="light");}catch(e){document.documentElement.classList.add("dark");}})();`;
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${rubik.className} bg-white text-black dark:bg-black dark:text-white`}
-      >
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${display.variable} ${sans.variable}`}
+    >
+      <body className="app-grain min-h-screen font-sans antialiased">
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <main>
-          <nav className="fixed top-0 w-full flex items-center justify-between px-5 h-16 bg-white/20 dark:bg-black/20 text-black dark:text-white backdrop-blur-xl z-50 shadow-md">
-            <Link
-              className="flex shrink-0 items-center justify-center rounded-md p-3 hover:bg-black/10 dark:hover:bg-white/20 transition"
-              href="/"
-            >
-              <PiTelevisionDuotone />
-              <span className="ml-1 hidden font-medium sm:inline">TV Bland</span>
-            </Link>
-            <Link
-              href="/browse"
-              className="shrink-0 rounded-md px-3 py-2 text-sm font-medium transition hover:bg-black/10 dark:hover:bg-white/20"
-            >
-              Browse
-            </Link>
-            <SearchBox />
-            <ThemeToggle />
-          </nav>
-          {children}
-        </main>
+        <div className="app-backdrop" aria-hidden />
+
+        <nav className="fixed inset-x-0 top-0 z-50 flex h-16 items-center gap-2 border-b hairline bg-bg/70 px-4 backdrop-blur-xl md:px-6">
+          <Link
+            href="/"
+            className="flex shrink-0 items-center gap-2 rounded-lg px-2 py-1.5 transition hover:bg-fg/5"
+          >
+            <PiTelevisionDuotone className="text-accent" size={24} />
+            <span className="hidden font-display text-lg font-semibold tracking-tight sm:inline">
+              TV Bland
+            </span>
+          </Link>
+          <Link
+            href="/browse"
+            className="shrink-0 rounded-lg px-3 py-2 text-sm font-medium text-muted transition hover:bg-fg/5 hover:text-fg"
+          >
+            Browse
+          </Link>
+          <SearchBox />
+          <ThemeToggle />
+        </nav>
+
+        {children}
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Show } from "@/types/show";
-import StarRating from "./starRating";
+import RatingBadge from "./ratingBadge";
 
 interface ShowCardProps {
   show: Show;
@@ -12,29 +12,25 @@ const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
     show.image?.original ?? show.image?.medium ?? "/tv-test-card-portrait.webp";
 
   return (
-    <Link
-      href={`/show/${show.id}`}
-      className="group flex flex-col gap-3 rounded-xl p-2 transition duration-200 hover:bg-black/5 hover:shadow-xl dark:hover:bg-white/5"
-    >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-lg ring-1 ring-black/5 dark:ring-white/10">
+    <Link href={`/show/${show.id}`} className="group flex flex-col gap-3">
+      <div className="relative aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10 shadow-lg shadow-black/40 transition duration-300 ease-spring group-hover:-translate-y-1 group-hover:ring-accent/50">
         <Image
           src={poster}
           fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
+          sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 200px"
           loading="lazy"
           alt={`${show.name} poster`}
-          className="object-cover transition duration-300 group-hover:scale-105"
+          className="object-cover transition duration-500 ease-spring group-hover:scale-[1.07]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
+        <RatingBadge
+          rating={show.rating?.average}
+          className="absolute left-2 top-2"
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <StarRating
-          rating={show.rating?.average ?? 0}
-          className="hidden text-lg md:flex"
-        />
-        <span className="text-sm font-medium leading-snug line-clamp-2">
-          {show.name}
-        </span>
-      </div>
+      <h3 className="line-clamp-2 text-sm font-medium leading-snug text-fg/85 transition group-hover:text-fg">
+        {show.name}
+      </h3>
     </Link>
   );
 };

@@ -1,5 +1,5 @@
+import Image from "next/image";
 import { Episode } from "@/types/episode";
-import { PiTelevisionDuotone } from "react-icons/pi";
 import ShowGrid from "@/components/showGrid";
 import { dedupeByShow } from "@/utils/dedupeByShow";
 import { getFormattedDate } from "@/utils/getCurrentDate";
@@ -23,7 +23,7 @@ async function getSchedule(): Promise<Episode[]> {
 export default async function HomePage() {
   const schedule = await getSchedule();
   const shows = dedupeByShow(schedule)
-    .slice(0, 24)
+    .slice(0, 30)
     .map((episode) => episode.show);
 
   const today = new Date().toLocaleDateString("en-GB", {
@@ -34,39 +34,48 @@ export default async function HomePage() {
   });
 
   return (
-    <div className="bg-home bg-cover bg-center text-black dark:text-white">
-      <header className="bg-gray-200/80 backdrop-blur-2xl dark:bg-gray-900/80">
-        <div className="mx-auto max-w-7xl px-6 pb-20 pt-32 md:px-10">
-          <div className="flex items-center gap-3">
-            <PiTelevisionDuotone size={48} />
-            <h1 className="text-5xl font-semibold tracking-tight md:text-6xl">
-              TV Bland
-            </h1>
-          </div>
-          <p className="mt-5 max-w-2xl text-lg text-gray-700 dark:text-gray-300">
-            Your TV show and web-series companion — episode guides, cast and
-            crew, and what&apos;s on the air right now.
+    <main>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src="/tv-test-card-portrait.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="scale-110 object-cover blur-2xl brightness-[0.45]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-bg/30 via-bg/70 to-bg" />
+        </div>
+
+        <div className="mx-auto max-w-8xl px-5 pb-16 pt-32 md:px-10 md:pt-44">
+          <p className="reveal text-xs font-semibold uppercase tracking-[0.32em] text-accent">
+            On air today
+          </p>
+          <h1 className="reveal mt-4 max-w-3xl font-display text-5xl font-semibold md:text-7xl">
+            What&apos;s on tonight
+          </h1>
+          <p
+            className="reveal mt-5 max-w-xl text-lg text-muted"
+            style={{ animationDelay: "80ms" }}
+          >
+            Today&apos;s live TV schedule, full episode guides, and the people
+            behind every show.
           </p>
         </div>
-      </header>
-
-      <section className="bg-white/90 backdrop-blur-2xl dark:bg-black/90">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:px-10">
-          <div className="mb-8 flex items-baseline justify-between gap-4">
-            <h2 className="text-2xl font-medium">On air today</h2>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              {today}
-            </span>
-          </div>
-          {shows.length > 0 ? (
-            <ShowGrid shows={shows} />
-          ) : (
-            <p className="text-gray-500 dark:text-gray-400">
-              No shows scheduled for today.
-            </p>
-          )}
-        </div>
       </section>
-    </div>
+
+      <section className="mx-auto max-w-8xl px-5 pb-24 md:px-10">
+        <div className="mb-7 flex items-end justify-between gap-4">
+          <h2 className="text-2xl font-semibold md:text-3xl">On air today</h2>
+          <span className="shrink-0 text-sm text-muted">{today}</span>
+        </div>
+        {shows.length > 0 ? (
+          <ShowGrid shows={shows} />
+        ) : (
+          <p className="text-muted">No shows scheduled for today.</p>
+        )}
+      </section>
+    </main>
   );
 }

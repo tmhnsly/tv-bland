@@ -7,12 +7,23 @@ module.exports = {
   ],
   darkMode: "class",
   theme: {
-    fontFamily: {
-      sans: ["Rubik", "sans-serif"],
-    },
     extend: {
-      backgroundImage: {
-        home: "url('/tv-test-card-portrait.webp')",
+      fontFamily: {
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "system-ui", "sans-serif"],
+      },
+      colors: {
+        bg: "rgb(var(--bg) / <alpha-value>)",
+        fg: "rgb(var(--fg) / <alpha-value>)",
+        muted: "rgb(var(--muted) / <alpha-value>)",
+        accent: "rgb(var(--accent) / <alpha-value>)",
+        "accent-fg": "rgb(var(--accent-fg) / <alpha-value>)",
+      },
+      maxWidth: {
+        "8xl": "88rem",
+      },
+      transitionTimingFunction: {
+        spring: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
     },
   },

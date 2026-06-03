@@ -29,28 +29,32 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const shows = query ? await searchShows(query) : [];
 
   return (
-    <div className="min-h-screen px-6 pb-16 pt-24 text-black dark:text-white md:px-10">
-      <div className="mx-auto max-w-7xl">
-        <h1 className="mb-2">Search</h1>
+    <main className="mx-auto min-h-screen max-w-8xl px-5 pb-24 pt-28 md:px-10 md:pt-32">
+      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">
+        Search
+      </p>
+      <h1 className="mt-3 font-display text-4xl font-semibold md:text-5xl">
+        {query ? `“${query}”` : "Find a show"}
+      </h1>
+
+      <div className="mt-10">
         {query ? (
           shows.length > 0 ? (
             <>
-              <p className="mb-8 text-gray-500 dark:text-gray-400">
-                {shows.length} result{shows.length === 1 ? "" : "s"} for “{query}”
+              <p className="mb-7 text-sm text-muted">
+                {shows.length} result{shows.length === 1 ? "" : "s"}
               </p>
               <ShowGrid shows={shows} />
             </>
           ) : (
-            <p className="text-gray-500 dark:text-gray-400">
-              No shows found for “{query}”.
-            </p>
+            <p className="text-muted">No shows found for “{query}”.</p>
           )
         ) : (
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-muted">
             Search for a show by name using the box above.
           </p>
         )}
       </div>
-    </div>
+    </main>
   );
 }

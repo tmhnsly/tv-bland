@@ -8,44 +8,33 @@ interface CastMemberCardProps {
 }
 
 const CastMemberCard: React.FC<CastMemberCardProps> = ({ castMember }) => {
+  const { person, character } = castMember;
+  const avatar = person.image?.medium ?? "/tv-test-card-portrait.webp";
+
   return (
-    <div className="flex flex-row md:flex-row items-center gap-5 md:gap-10 h-auto md:h-20">
-      <Link
-        href={`/person/${castMember.person.id}`}
-        className="w-20 h-20 flex-shrink-0 rounded-full overflow-hidden relative hover:scale-105 hover:shadow-md"
-      >
+    <Link
+      href={`/person/${person.id}`}
+      className="group flex items-center gap-3 rounded-xl glass p-2 pr-4 transition hover:ring-1 hover:ring-accent/40"
+    >
+      <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full ring-1 ring-white/10">
         <Image
-          src={
-            castMember.person.image && castMember.person.image.medium
-              ? castMember.person.image.medium
-              : "/tv-test-card-portrait.webp"
-          }
-          alt={castMember.person.name}
+          src={avatar}
+          alt={person.name}
           fill
-          sizes="80px"
+          sizes="56px"
           loading="lazy"
           className="object-cover"
         />
-      </Link>
-      <div className="flex flex-col md:w-3/4 lg:flex-row lg:gap-5 lg:justify-between">
-        <Link
-          className="text-black dark:text-white hover:underline"
-          href={`/person/${castMember.person.id}`}
-        >
-          {castMember.person.name}
-        </Link>
-        <a
-          className="text-gray-500 dark:text-gray-400 hover:underline"
-          href={castMember.character.url}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {castMember.character
-            ? castMember.character.name
-            : "No character information available"}
-        </a>
-      </div>
-    </div>
+      </span>
+      <span className="min-w-0">
+        <span className="block truncate text-sm font-medium transition group-hover:text-accent">
+          {person.name}
+        </span>
+        <span className="block truncate text-xs text-muted">
+          {character?.name ?? "—"}
+        </span>
+      </span>
+    </Link>
   );
 };
 

@@ -7,26 +7,23 @@ interface StarringSectionProps {
 }
 
 const StarringSection: React.FC<StarringSectionProps> = ({ cast }) => {
-  const renderCastMembers = () => {
-    if (cast && cast.length > 0) {
-      return cast
-        .slice(0, 4)
-        .map((castMember: CastMember, key: number) => (
-          <CastMemberCard castMember={castMember} key={key} />
-        ));
-    } else {
-      return (
-        <span className="text-gray-500 dark:text-gray-400">
-          No cast information available
-        </span>
-      );
-    }
-  };
+  if (!cast || cast.length === 0) {
+    return (
+      <div>
+        <h2 className="mb-5 text-2xl font-semibold">Cast</h2>
+        <p className="text-muted">No cast information available.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="md:flex md:flex-col">
-      <h2 className="mb-5 text-black dark:text-white">Starring</h2>
-      <div className="flex flex-col gap-5">{renderCastMembers()}</div>
+    <div>
+      <h2 className="mb-5 text-2xl font-semibold">Cast</h2>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {cast.slice(0, 8).map((castMember, key) => (
+          <CastMemberCard castMember={castMember} key={key} />
+        ))}
+      </div>
     </div>
   );
 };

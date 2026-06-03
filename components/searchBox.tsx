@@ -53,10 +53,10 @@ const SearchBox: React.FC = () => {
         if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false);
       }}
       role="search"
-      className="relative mx-3 w-full max-w-md"
+      className="relative mx-1 w-full max-w-xl"
     >
-      <div className="flex items-center gap-2 rounded-md bg-black/5 px-3 dark:bg-white/10">
-        <IoSearch className="shrink-0 opacity-60" aria-hidden />
+      <div className="flex items-center gap-2 rounded-lg bg-fg/5 px-3 ring-1 ring-transparent transition focus-within:bg-fg/[0.07] focus-within:ring-accent/40">
+        <IoSearch className="shrink-0 text-muted" aria-hidden />
         <input
           type="search"
           value={query}
@@ -67,20 +67,20 @@ const SearchBox: React.FC = () => {
           onFocus={() => setOpen(true)}
           placeholder="Search shows…"
           aria-label="Search shows"
-          className="w-full bg-transparent py-2 text-sm outline-none placeholder:text-black/50 dark:placeholder:text-white/50"
+          className="w-full bg-transparent py-2 text-sm text-fg outline-none placeholder:text-muted"
         />
       </div>
 
       {open && suggestions.length > 0 && (
-        <ul className="absolute left-0 right-0 top-full mt-2 overflow-hidden rounded-md border border-black/10 bg-white shadow-xl dark:border-white/10 dark:bg-neutral-900">
+        <ul className="glass absolute inset-x-0 top-full mt-2 overflow-hidden rounded-xl shadow-2xl shadow-black/40">
           {suggestions.map((s) => (
             <li key={s.id}>
               <Link
                 href={`/show/${s.id}`}
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-3 py-2 hover:bg-black/5 dark:hover:bg-white/10"
+                className="flex items-center gap-3 px-3 py-2 transition hover:bg-fg/5"
               >
-                <span className="relative h-12 w-9 shrink-0 overflow-hidden rounded bg-black/10 dark:bg-white/10">
+                <span className="relative h-12 w-9 shrink-0 overflow-hidden rounded bg-fg/10">
                   {s.image && (
                     <Image
                       src={s.image}
@@ -91,13 +91,9 @@ const SearchBox: React.FC = () => {
                     />
                   )}
                 </span>
-                <span className="truncate text-sm">
+                <span className="truncate text-sm text-fg">
                   {s.name}
-                  {s.year && (
-                    <span className="ml-1 text-black/50 dark:text-white/50">
-                      ({s.year})
-                    </span>
-                  )}
+                  {s.year && <span className="ml-1 text-muted">({s.year})</span>}
                 </span>
               </Link>
             </li>
@@ -106,7 +102,7 @@ const SearchBox: React.FC = () => {
             <Link
               href={`/search?q=${encodeURIComponent(query.trim())}`}
               onClick={() => setOpen(false)}
-              className="block px-3 py-2 text-sm font-medium text-blue-600 hover:bg-black/5 dark:text-blue-400 dark:hover:bg-white/10"
+              className="block px-3 py-2 text-sm font-medium text-accent transition hover:bg-fg/5"
             >
               See all results for “{query.trim()}”
             </Link>

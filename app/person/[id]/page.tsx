@@ -65,35 +65,31 @@ export default async function PersonPage({ params }: PersonPageProps) {
     .join(" · ");
 
   return (
-    <div className="min-h-screen px-6 pb-16 pt-24 text-black dark:text-white md:px-10">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-12 flex items-center gap-6">
-          <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full ring-1 ring-black/10 dark:ring-white/10">
-            <Image
-              src={image}
-              alt={person.name}
-              fill
-              sizes="112px"
-              className="object-cover"
-            />
-          </div>
-          <div>
-            <h1>{person.name}</h1>
-            {meta && (
-              <p className="text-gray-500 dark:text-gray-400">{meta}</p>
-            )}
-          </div>
+    <main className="mx-auto min-h-screen max-w-8xl px-5 pb-24 pt-28 md:px-10 md:pt-32">
+      <div className="reveal mb-12 flex items-center gap-5">
+        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full ring-1 ring-white/15 shadow-xl shadow-black/40 md:h-28 md:w-28">
+          <Image
+            src={image}
+            alt={person.name}
+            fill
+            sizes="112px"
+            className="object-cover"
+          />
         </div>
-
-        <h2 className="mb-5">Known for</h2>
-        {shows.length > 0 ? (
-          <ShowGrid shows={shows} />
-        ) : (
-          <p className="text-gray-500 dark:text-gray-400">
-            No credits available.
-          </p>
-        )}
+        <div>
+          <h1 className="font-display text-3xl font-semibold md:text-5xl">
+            {person.name}
+          </h1>
+          {meta && <p className="mt-2 text-muted">{meta}</p>}
+        </div>
       </div>
-    </div>
+
+      <h2 className="mb-6 text-2xl font-semibold">Known for</h2>
+      {shows.length > 0 ? (
+        <ShowGrid shows={shows} />
+      ) : (
+        <p className="text-muted">No credits available.</p>
+      )}
+    </main>
   );
 }
