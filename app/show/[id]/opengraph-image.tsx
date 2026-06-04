@@ -19,7 +19,7 @@ export default async function OgImage({
 }) {
   const { id } = await params;
   const show = await getShow(id);
-  const name: string = show?.name ?? "TV Bland";
+  const name: string = show?.name ?? "Dropoff";
   const rating: number | null = show?.rating?.average ?? null;
   const poster: string | null = show?.image?.original ?? null;
 
